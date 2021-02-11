@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %} Kirjaudu sisään {% endblock %}
+{% block content %}
+<body> 
+  <h1> Kirjaudu sisään </h1>
+  <hr>
+  <p> Väärä käyttäjä/salasana<br>
+  <form action="/checklogin" method="POST">
+    <p> Käyttäjätili: 
+    <input type= "text" name ="username"></p>
+    <p> Salasana:
+    <input type= "password" name = "password"></p>
+    <input type = "submit" value = "Kirjaudu"> 
+  </form>
+  <p> Etkö omista tunnusta?<br> 
+  <a href="/signin"> Luo tunnus tästä! </a></p>
+
+</body>
+{% endblock %}
