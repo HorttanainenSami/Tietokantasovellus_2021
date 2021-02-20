@@ -51,45 +51,50 @@ def logout():
 
 @app.route("/create")
 def create():
-    incomplete= advertisementQuery.getIncomplete(session["username"])
-    advertisement_id ="" 
-    header = "" 
-    text = "" 
-    images=""
-    if incomplete:
-        advertisement_id = incomplete[0]
-        header = incomplete[4] 
-        text = incomplete[5] 
-        images=advertisementQuery.fetchImages(advertisement_id)
-
-    return render_template("create.html",header=header, text=text, images= images, incomplete=incomplete, advertisement_id=advertisement_id)
+    incompletes= advertisementQuery.getIncompletes(session["id"])
+    incomplete_ids = []
+    images =[]
+    for incomplete in incompletes:
+        incomplete_ids.append(incomplete[0])
+    for i, ids in enumerate(incomplete_ids):
+        result = advertisementQuery.fetchImages(ids)
+        images.append(result) 
+    return render_template("create.html",incompletes=incompletes, images = images)
 
 @app.route("/newAdvertisement", methods=["POST"])
 def newAdvertisement():
-    advertisementQuery.newAdvertisement(session["id"])
-    return redirect("/create")
+    advertisement_id = advertisementQuery.newAdvertisement(session["id"])
+    return redirect("/editAdvertisement/"+str(advertisement_id))
+#############
+@app.route("/editAdvertisement/<int:id>", methods =["GET"])
+def editAdvertisement(id):
+    images = advertisementQuery.fetchImages(id)  
+    advertisement = advertisementQuery.getIncomplete(session["id"], id)
 
-@app.route("/remove", methods=["POST"])
-def removeAdvertisement():
-    advertisement_id = request.form["id"]
-    #advertisementQuery.remove(adveretisement_id, session["id"])
-    print("remove "+str(advertisement_id))
+    return render_template("edit.html",header=advertisement[4], images = images, text = advertisement[5], advertisement_id = id)
+
+@app.route("/delete", methods=["POST"])
+def delete():
+    id = request.form["id"]
+    if "delete" in request.form:
+        advertisementQuery.removeAdvertisement(id) 
     return redirect("/create")
 
 @app.route("/edit", methods=["POST"])
 def edit():
     id = request.form["id"]
+    content= request.form["text"]
+    header = request.form["header"]
+    advertisementQuery.updateContent(content, header, id)    
+
     if "publish" in request.form:
-        print("publish")    
-
+        print("publish")
     if "upload" in request.form:
-        text = request.form["text"]
+        print("upload image")
         file = request.files["image"]
-        advertisementQuery.send( text, id, file)
+        advertisementQuery.sendimage(id, file)
 
-    if "delete" in request.form:
-        advertisementQuery.removeAdvertisement(id) 
-    return redirect("/create")
+    return redirect("/editAdvertisement/"+str(id))
 
 @app.route("/show/<int:id>")
 def send(id):

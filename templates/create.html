@@ -1,37 +1,45 @@
 {% extends "layout.html" %}
 {% block title %}Luo uusi ilmoitus {% endblock %}
 {% block content %}
+
+
 <body>
   <h1> Luo uusi ilmoitus tontillesi</h1>
-  {% if incomplete: %}
-  <hr> 
-  <form action = "/edit" method = "POST" enctype = "multipart/form-data">
-    <p> Lisää otsikko <br>
-    <input type = "text" name ="header" value = {{header}} ></p>
-
-    {% for image in images %}
-    {{image}}
-    <img src="/show/{{image[0]}}" alt = "pictures" >
-    {% endfor %}
-
-    <p> Lisää kuva ilmoituksellesi<br>
-    <input type = "file" name = "image">
-    <input type = "submit" name = "upload" value = "Lisää kuva"></p>
-
-    <br>
-    <p> Teksti alue: <br> 
-    <input type = "text" name = "text" value= {{text}}> </p><br>
-    <input type = "submit" name = "publish" value = "Tallenna ilmoitus"></p>
-    <br><hr>
-    <input type = "submit" name = "delete" value = "Poista ilmoituksesi">
-    <input type = "hidden" name = "id" value = {{advertisement_id}} > 
-  </form>
-  {% else %}
+  <br><p>
   <form action ="/newAdvertisement" method = "POST"> 
-    <p> Sinulla ei ole keskeneräisiä ilmoituksia<br>
     <input type = "submit" value ="Luo uusi ilmoitus"></p>
   </form>
+  <h1> Keskeneräiset ilmoituksesi </h1>
+  {% if incompletes: %}
+  <p>Sinulla on {{ incompletes|length }} keskeneräistä ilmoitusta julkaisematta</p> 
+  {% for incomplete in incompletes %}
+
+  <div class="card">
+    <form action = "/editAdvertisement/{{incomplete[0]}}" method = "GET">
+      {% if  images[loop.index0]|length != 0: %}
+        <img src = "/show/{{ images[loop.index0][0][0] }}" style = "width:100%">
+      {% else %}
+        <img src = "/static/placeholder.png" style = "width:100%">
+      {% endif %}
+      <div class ="container">
+        <h4><b>{{ incomplete[4] }}</b></h4> 
+        <p>{{ incomplete[5][:30] }}</p>
+        <hr>
+        <input type = "submit" name = "edit" value = "Muokkaa">
+        <input type = "hidden" name="id" value = {{incomplete[0]}}>
+    </form>
+  <form action = "/delete" method = "POST" >
+    <input type = "submit" name = "delete" value = "Poista">
+    <input type = "hidden" name="id" value = {{incomplete[0]}}>
+      </div>
+  </form>
+  </div>
+    </p>
+  {% endfor %}
+  {% else %}
+    <p> Sinulla ei ole keskeneräisiä ilmoituksia<br>
   {% endif %}
 </body>
+
 {% endblock %}
 

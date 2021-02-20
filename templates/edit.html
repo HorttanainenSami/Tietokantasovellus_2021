@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Muokkaa ilmoitustasi{% endblock %}
+{% block content %}
+<body>
+  <hr> 
+  <form action = "/edit" method = "POST" enctype = "multipart/form-data">
+    <p> Lisää otsikko <br>
+    <textArea name ="header" id ="1" placeholder = "Lisää tähän otsikkosi">{{ header }}</textArea></p>
+
+    <div class="box"> 
+    {% for image in images %}
+    <div class = "column"> 
+      <img src="/show/{{ image[0] }}" alt = "pictures" width=300 height = 200>
+    </div>
+    {% endfor %}
+
+    </div>
+    <p> Lisää kuva ilmoituksellesi<br>
+    <input type = "file" name = "image">
+    <input type = "submit" name = "upload" value = "Lisää kuva"></p>
+    <br>
+    <p> Pyyntöhinta<br>
+    <input type="text" name = "price" value={{price}} > €/Kuukausi
+    <br>
+    <p> Teksti alue: <br> 
+    <textArea name = "text" id = "2" placeholder = "Lisää esittely ilmoituksellesi" rows="10" cols = "50">{{ text }}</textArea> </p><br>
+    <input type = "submit" name = "save" value = "Tallenna muutokset">
+    <br>
+    <input type = "submit" name = "publish" value = "Julkaise ilmoitus"></p>
+    <input type = "hidden" name = "id" value = {{ advertisement_id }} > 
+    <br><hr>
+  </form>
+  <form action = "/delete" method = "POST">
+    <input type = "submit" name = "delete" value = "Poista ilmoituksesi">
+    <input type = "hidden" name = "id" value = {{ advertisement_id }} > 
+  </form>
+</body>
+{% endblock %}
+

@@ -1,6 +1,20 @@
-body {
-    margin: auto;
-    max-width: 45em;
-    font-family: 'Helvetica', 'Arial', sans-serif;
+footer {
+    background: grey;
+}
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+  width:400px;
+}
+img {
+ border-radius: 10px 10px 0 0;
+}
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  background-color: #e6e6e6;
 }
 
+.container {
+  padding: 2px 16px;
+}

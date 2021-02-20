@@ -1,6 +1,6 @@
 from db import db 
 
-def send(text, id, file):
+def sendimage(id, file):
     name = file.filename
     if not name.endswith(".jpeg"):
         print("invalid filename")
@@ -14,27 +14,40 @@ def send(text, id, file):
     db.session.commit()
     return "OK"
 
+def updateContent(content, header, id):
+    print(header)
+    sql = "UPDATE advertisement SET content=:content, header=:header WHERE id =:id"
+    db.session.execute(sql,{"id":id, "content":content, "header":header})
+    db.session.commit()
+
 def newAdvertisement(id):
-    sql = "INSERT INTO advertisement (user_id,localaddress_id, published, header, content) VALUES (:user_id, NULL, FALSE, '', '')"
+    sql = "INSERT INTO advertisement (user_id,localaddress_id, published, header, content) VALUES (:user_id, NULL, FALSE, '', '') RETURNING id"
     advertisement_id = db.session.execute(sql, {"user_id":id})
     db.session.commit()
-    return "OK" 
+    return advertisement_id.fetchone()[0]
 
-def getIncomplete(username):
-    sql = "SELECT * FROM advertisement WHERE published=FALSE"
-    result = db.session.execute(sql)
-    return result.fetchone() 
+def getIncomplete(user_id, advertisement_id):
+    sql = "SELECT * FROM advertisement WHERE user_id=:user_id AND id=:id"
+    result = db.session.execute(sql, {"user_id":user_id, "id":advertisement_id})
+    return result.fetchone()
+
+def getIncompletes(user_id):
+    sql = "SELECT * FROM advertisement WHERE published=FALSE AND user_id=:user_id"
+    result = db.session.execute(sql, {"user_id":user_id})
+    return result.fetchall() 
+
 def fetchImages(id):
     sql = "SELECT id FROM images WHERE advertisement_id=:id"
-    print(id)
     result = db.session.execute(sql, {"id":id})
     return result.fetchall()
+
 def show(id):
     sql = "SELECT data FROM images WHERE id=:id"
     result = db.session.execute(sql, {"id":id}).fetchone()
     if result == None:
         return 'Wrong id'
     return result[0]
+
 def removeAdvertisement(id):
     sql = "DELETE FROM advertisement WHERE id=:id"
     db.session.execute(sql, {"id":id})
