@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import 'card.html' as form %}
 {% block title %} Profiili {% endblock %}
 {% block content %}
 <body>
@@ -7,6 +8,13 @@
 
   <body>
     <h3> Tekemäsi tontti ilmoitukset</h3>
-    </body>
+    {% if advertisements %}
+      {% for advertisement in advertisements %}
+      <p> {{ form.card(images[loop.index0], advertisement) }}</p>
+      {% endfor %}
+    {% else %}
+      <p> Sinulla ei ole julkaistuja tontti ilmoituksia </p>
+    {% endif %}
+  </body>
 </body>
 {% endblock %}

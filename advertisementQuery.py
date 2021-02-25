@@ -26,6 +26,11 @@ def newAdvertisement(id):
     db.session.commit()
     return advertisement_id.fetchone()[0]
 
+def getPublishedAdvertisements(user_id):
+    sql = "SELECT * FROM advertisement WHERE published=TRUE AND user_id=:user_id" 
+    result = db.session.execute(sql, {"user_id":user_id})
+    return result.fetchall()
+
 def getIncomplete(user_id, advertisement_id):
     sql = "SELECT * FROM advertisement WHERE user_id=:user_id AND id=:id"
     result = db.session.execute(sql, {"user_id":user_id, "id":advertisement_id})

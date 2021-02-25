@@ -5,11 +5,20 @@ import userhandling,advertisementQuery
 @app.route("/")
 def index():
     return render_template("index.html" )
+
 @app.route("/profile")
-#######################################################
-# handle user#
 def profile():
-    return render_template("profile.html")
+    ## fetch profiles published advertisements
+    ## fetch images of advertisements
+    advertisements = advertisementQuery.getPublishedAdvertisements(session["id"])
+    images =[]  
+    if advertisements != None: 
+        for adv in advertisements:
+            id = adv[0]
+            images.append(advertisementQuery.fetchImages(adv[0]))
+    
+    return render_template("profile.html", advertisements = advertisements, images = images)
+
 @app.route("/signin")
 
 def registerUser():
@@ -57,7 +66,7 @@ def create():
     images =[]
     for incomplete in incompletes:
         incomplete_ids.append(incomplete[0])
-    for i, ids in enumerate(incomplete_ids):
+    for ids in incomplete_ids:
         result = advertisementQuery.fetchImages(ids)
         images.append(result) 
     return render_template("create.html",incompletes=incompletes, images = images)
