@@ -1,0 +1,22 @@
+{% macro card(images, advertisement) %}
+  <div class="card">
+    <form action = "/handleRedirect" method = "POST">
+      {% if  images|length != 0: %}
+        <img src = "/show/{{ images[0][0] }}" style = "width:100%">
+      {% else %}
+        <img src = "/static/placeholder.png" style = "width:100%">
+      {% endif %}
+
+      <div class ="container">
+        <h4><b>{{ advertisement[4] }}</b></h4> 
+          <div class="price"> {{ advertisement[5] }}€/Kk</div>
+        <p>{{ advertisement[6][:200] }}</p>
+        <hr>
+          <input class="button" type = "submit" name = "edit" value = "Muokkaa">
+          <input type = "hidden" name="id" value = {{advertisement[0]}}>
+          <input class="button" type = "submit" name = "delete" value = "Poista">
+          <input type = "hidden" name="id" value = {{advertisement[0]}}>
+      </div>
+    </form>
+  </div>
+{% endmacro %}

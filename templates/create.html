@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "card.html" as form %}
 {% block title %}Luo uusi ilmoitus {% endblock %}
 {% block content %}
 
@@ -12,31 +13,12 @@
   <h1> Keskeneräiset ilmoituksesi </h1>
   {% if incompletes: %}
   <p>Sinulla on {{ incompletes|length }} keskeneräistä ilmoitusta julkaisematta</p> 
+  
   {% for incomplete in incompletes %}
-
-  <div class="card">
-    <form action = "/handleRedirect" method = "POST">
-      {% if  images[loop.index0]|length != 0: %}
-        <img src = "/show/{{ images[loop.index0][0][0] }}" style = "width:100%">
-      {% else %}
-        <img src = "/static/placeholder.png" style = "width:100%">
-      {% endif %}
-
-      <div class ="container">
-        <h4><b>{{ incomplete[4] }}</b></h4> 
-          <div class="price"> {{ incomplete[5] }}€/Kk</div>
-        <p>{{ incomplete[6][:200] }}</p>
-        <hr>
-          <input class="button" type = "submit" name = "edit" value = "Muokkaa">
-          <input type = "hidden" name="id" value = {{incomplete[0]}}>
-          <input class="button" type = "submit" name = "delete" value = "Poista">
-          <input type = "hidden" name="id" value = {{incomplete[0]}}>
-      </div>
-
-    </form>
-  </div>
-    </p>
+    {{ form.card(images[loop.index0], incomplete) }}
+    <br>
   {% endfor %}
+
   {% else %}
     <p> Sinulla ei ole keskeneräisiä ilmoituksia<br>
   {% endif %}
