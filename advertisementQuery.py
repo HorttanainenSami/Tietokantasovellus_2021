@@ -70,7 +70,7 @@ def removeAdvertisement(id,user_id):
     db.session.commit()
     return "OK"
 def publish(id, user_id):
-    sql = "UPDATE advertisement SET published=TRUE WHERE id=:id AND user_id=:user_id"
+    sql = "UPDATE advertisement SET published=TRUE, published_at =NOW() WHERE id=:id AND user_id=:user_id"
     db.session.execute(sql, {"id":id, "user_id":user_id})
     db.session.commit()
     return "OK"

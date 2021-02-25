@@ -22,6 +22,7 @@ CREATE TABLE advertisement (
   user_id INTEGER REFERENCES users ON DELETE CASCADE,
   localAddress_id INTEGER REFERENCES localaddress,
   published BOOLEAN,
+  published_at TIMESTAMP, 
   header TEXT,
   price TEXT,
   content TEXT

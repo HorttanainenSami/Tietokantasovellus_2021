@@ -22,7 +22,7 @@ def login(username, password):
 ## KYSY onko tämä turvallinen tapa siirtää salasana, vai pitääkö se siirtää jo salattuna
 def register(username, password):
     hash_value = generate_password_hash(password)
-    sql = "INSERT INTO users (username, password) VALUES (:username, :password)"
+    sql = "INSERT INTO users (username, password, created_at) VALUES (:username, :password, NOW())"
     db.session.execute(sql, {"username":username, "password" : hash_value})
     db.session.commit() 
     return()

@@ -81,7 +81,7 @@ def editAdvertisement(id):
     images = advertisementQuery.fetchImages(id)  
     advertisement = advertisementQuery.getIncomplete(session["id"], id)
 
-    return render_template("edit.html",header=advertisement[4], images = images, text = advertisement[6], price = advertisement[5], advertisement_id = id)
+    return render_template("edit.html", header=advertisement[5], images = images, content= advertisement[7], price = advertisement[6], advertisement_id = id)
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -120,7 +120,7 @@ def show_advertsiment(id):
     advertisement=advertisementQuery.get_advertisement(id)
     images = advertisementQuery.fetchImages(id)
 
-    return render_template("advertisement.html", header=advertisement[4], images = images, text = advertisement[6], price = advertisement[5], advertisement_id = id)
+    return render_template("advertisement.html", header=advertisement[5], images = images, content= advertisement[7], price = advertisement[6], advertisement_id = id)
 
 @app.route("/show/<int:id>")
 def send_img(id):
