@@ -7,7 +7,7 @@
   <h1> Luo uusi ilmoitus tontillesi</h1>
   <br><p>
   <form action ="/newAdvertisement" method = "POST"> 
-    <input type = "submit" value ="Luo uusi ilmoitus"></p>
+    <input class="button" type = "submit" value ="Luo uusi ilmoitus"></p>
   </form>
   <h1> Keskeneräiset ilmoituksesi </h1>
   {% if incompletes: %}
@@ -15,24 +15,25 @@
   {% for incomplete in incompletes %}
 
   <div class="card">
-    <form action = "/editAdvertisement/{{incomplete[0]}}" method = "GET">
+    <form action = "/handleRedirect" method = "POST">
       {% if  images[loop.index0]|length != 0: %}
         <img src = "/show/{{ images[loop.index0][0][0] }}" style = "width:100%">
       {% else %}
         <img src = "/static/placeholder.png" style = "width:100%">
       {% endif %}
+
       <div class ="container">
         <h4><b>{{ incomplete[4] }}</b></h4> 
-        <p>{{ incomplete[5][:30] }}</p>
+          <div class="price"> {{ incomplete[5] }}€/Kk</div>
+        <p>{{ incomplete[6][:200] }}</p>
         <hr>
-        <input type = "submit" name = "edit" value = "Muokkaa">
-        <input type = "hidden" name="id" value = {{incomplete[0]}}>
-    </form>
-  <form action = "/delete" method = "POST" >
-    <input type = "submit" name = "delete" value = "Poista">
-    <input type = "hidden" name="id" value = {{incomplete[0]}}>
+          <input class="button" type = "submit" name = "edit" value = "Muokkaa">
+          <input type = "hidden" name="id" value = {{incomplete[0]}}>
+          <input class="button" type = "submit" name = "delete" value = "Poista">
+          <input type = "hidden" name="id" value = {{incomplete[0]}}>
       </div>
-  </form>
+
+    </form>
   </div>
     </p>
   {% endfor %}
