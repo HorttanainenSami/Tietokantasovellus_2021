@@ -14,14 +14,14 @@ def sendimage(id, file):
     db.session.commit()
     return "OK"
 
-def updateContent(content, header, id):
+def updateContent(content, header,price, id):
     print(header)
-    sql = "UPDATE advertisement SET content=:content, header=:header WHERE id =:id"
-    db.session.execute(sql,{"id":id, "content":content, "header":header})
+    sql = "UPDATE advertisement SET content=:content, header=:header, price=:price WHERE id =:id"
+    db.session.execute(sql,{"id":id, "content":content, "header":header,"price":price})
     db.session.commit()
 
 def newAdvertisement(id):
-    sql = "INSERT INTO advertisement (user_id,localaddress_id, published, header, content) VALUES (:user_id, NULL, FALSE, '', '') RETURNING id"
+    sql = "INSERT INTO advertisement (user_id,localaddress_id, published, header, content,price) VALUES (:user_id, NULL, FALSE, '', '', '') RETURNING id"
     advertisement_id = db.session.execute(sql, {"user_id":id})
     db.session.commit()
     return advertisement_id.fetchone()[0]
@@ -41,17 +41,31 @@ def fetchImages(id):
     result = db.session.execute(sql, {"id":id})
     return result.fetchall()
 
-def show(id):
+def show_img(id):
     sql = "SELECT data FROM images WHERE id=:id"
     result = db.session.execute(sql, {"id":id}).fetchone()
     if result == None:
         return 'Wrong id'
     return result[0]
 
-def removeAdvertisement(id):
-    sql = "DELETE FROM advertisement WHERE id=:id"
-    db.session.execute(sql, {"id":id})
-    sql = "DELETE FROM images WHERE advertisement_id=:id"
-    db.session.execute(sql, {"id":id})
+def get_advertisement(id):
+    sql = "SELECT * from advertisement WHERE id=:id"
+    result = db.session.execute(sql, {"id":id}).fetchone()
+    if result == None:
+        return 'Wrong id'
+    return result
+def removeAdvertisement(id,user_id):
+    sql = "SELECT id FROM advertisement WHERE id=:id AND user_id=:user_id"
+    result = db.session.execute(sql, {"id":id, "user_id":user_id})
+    if result:
+        sql = "DELETE FROM images WHERE advertisement_id=:id"
+        db.session.execute(sql, {"id":id})
+    sql = "DELETE FROM advertisement WHERE id=:id AND user_id=:user_id"
+    db.session.execute(sql, {"id":id, "user_id":user_id})
+    db.session.commit()
+    return "OK"
+def publish(id, user_id):
+    sql = "UPDATE advertisement SET published=TRUE WHERE id=:id AND user_id=:user_id"
+    db.session.execute(sql, {"id":id, "user_id":user_id})
     db.session.commit()
     return "OK"
