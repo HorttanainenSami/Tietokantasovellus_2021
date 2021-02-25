@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Advertisement{% endblock %}
+{% block content %}
+<body>
+  <h1>{{ header}}</h1>
+  <h4> hinta : {{ price }} </h4>
+
+  {% for image_id in images: %}
+    <img src="/show/{{ image_id[0] }}" >
+  {% endfor %}
+  <br>
+  <div class = "textbox">
+    {{ text }}
+  </div>
+</body>
+
+{% endblock %}
