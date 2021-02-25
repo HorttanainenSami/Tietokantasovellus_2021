@@ -23,6 +23,7 @@ CREATE TABLE advertisement (
   localAddress_id INTEGER REFERENCES localaddress,
   published BOOLEAN,
   header TEXT,
+  price TEXT,
   content TEXT
 );
 CREATE TABLE images (
