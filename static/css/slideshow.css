@@ -5,13 +5,25 @@ img {vertical-align: middle;}
   max-width: 500px;
   position: relative;
   margin: auto;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+  width:400px;
+  background-color: #e1d5d5;
+}
+.preview-content {
+  margin:10px;
+}
+.preview_cards {
+  text-decoration: none;
+  color: black;
 }
 
 /* Next & previous buttons */
 .prev, .next {
   cursor: pointer;
   position: absolute;
-  top: 50%;
+  top: 30%;
   width: auto;
   padding: 16px;
   margin-top: -22px;
