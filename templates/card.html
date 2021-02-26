@@ -2,7 +2,7 @@
   <div class="card">
     <form action = "/handleRedirect" method = "POST">
       {% if  images|length != 0: %}
-        <img src = "/show/{{ images[0][0] }}" style = "width:100%">
+        <img src = "/show/image/{{ images[0][0] }}" style = "width:100%">
       {% else %}
         <img src = "/static/placeholder.png" style = "width:100%">
       {% endif %}

@@ -3,14 +3,14 @@
 {% block content %}
 <body>
   <hr> 
-  <form action = "/updateAdvertisement" method = "POST" enctype = "multipart/form-data">
+  <form action = "/advertisement/update" method = "POST" enctype = "multipart/form-data">
     <p> Lisää otsikko <br>
     <textArea name ="header" id ="1" placeholder = "Lisää tähän otsikkosi">{{ header }}</textArea></p>
 
     <div class="box"> 
     {% for image in images %}
     <div class = "column"> 
-      <img src="/show/{{ image[0] }}" alt = "pictures" width=300 height = 200>
+      <img src="/show/image/{{ image[0] }}" alt = "pictures" width=300 height = 200>
     </div>
     {% endfor %}
 

@@ -7,15 +7,15 @@
 <body>
   <h1> Luo uusi ilmoitus tontillesi</h1>
   <br><p>
-  <form action ="/newAdvertisement" method = "POST"> 
+  <form action ="/advertisement/new" method = "POST"> 
     <input class="button" type = "submit" value ="Luo uusi ilmoitus"></p>
   </form>
   <h1> Keskeneräiset ilmoituksesi </h1>
-  {% if incompletes: %}
-  <p>Sinulla on {{ incompletes|length }} keskeneräistä ilmoitusta julkaisematta</p> 
+  {% if advertisements: %}
+  <p>Sinulla on {{ advertisements|length }} keskeneräistä ilmoitusta julkaisematta</p> 
   
-  {% for incomplete in incompletes %}
-    {{ form.card(images[loop.index0], incomplete) }}
+  {% for advertisement in advertisements%}
+    {{ form.card(images[loop.index0], advertisement) }}
     <br>
   {% endfor %}
 

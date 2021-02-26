@@ -1,54 +1,53 @@
-from flask import redirect, render_template, request, session, make_response
+from flask import redirect, render_template, request, session, make_response, url_for
 from app import app
-import userhandling,advertisementQuery
+import userSession,query
 
-@app.route("/")
-def index():
-    return render_template("index.html" )
+##UserSession handling
 
-@app.route("/profile")
+@app.route("/user/profile")
 def profile():
     ## fetch profiles published advertisements
     ## fetch images of advertisements
-    advertisements = advertisementQuery.getPublishedAdvertisements(session["id"])
+    session['url'] = url_for('profile')
+    pub_adv= query.get_advert_published(session["id"])
     images =[]  
-    if advertisements != None: 
-        for adv in advertisements:
-            id = adv[0]
-            images.append(advertisementQuery.fetchImages(adv[0]))
+    if pub_adv!= None: 
+        for adv in pub_adv:
+            images.append(query.get_images(adv[0]))
     
-    return render_template("profile.html", advertisements = advertisements, images = images)
+    return render_template("profile.html", advertisements = pub_adv, images = images)
 
 @app.route("/signin")
-
-def registerUser():
+def signin():
     return render_template("signin.html")
 
 @app.route("/register", methods=["POST"])
-
 def register():
-    userhandling.register(request.form["username"], request.form["password"]) 
+    username = request.form["username"]
+    password = request.form["password"]
+    userSession.handleRegister(username, password)
     return redirect("/login") 
 
 @app.route("/login")
 def login():
     return(render_template("login.html"))
 
-@app.route("/loginerror")
+@app.route("/login/error")
 def result():
     return(render_template("loginerror.html"))
 
-@app.route("/checklogin", methods=["POST"])
+@app.route("/login/check", methods=["POST"])
 def checklogin():
     username=request.form["username"]
     password=request.form["password"]
-    user = userhandling.login(username, password)
+    user = userSession.handleLogin(username, password)
 
     if user != None:
-        session["username"] = username
-        session["id"] = userhandling.id(username) 
+        session["username"] = user[1]
+        session["id"] = user[0] 
         return redirect("/")
-    return redirect("/loginerror")
+
+    return redirect("/login/error")
 
 @app.route("/logout")
 def logout():
@@ -59,72 +58,81 @@ def logout():
 ########################################################
 ### handle uploading
 
-@app.route("/create")
-def create():
-    incompletes= advertisementQuery.getIncompletes(session["id"])
+@app.route("/")
+def index():
+    return render_template("index.html" )
+
+@app.route("/advertisement/unpublished")
+def show_unpub_adv():
+    session["url"] = url_for('show_unpub_adv')
+    incompletes= query.get_advert_incompletes(session["id"])
     incomplete_ids = []
     images =[]
     for incomplete in incompletes:
-        incomplete_ids.append(incomplete[0])
-    for ids in incomplete_ids:
-        result = advertisementQuery.fetchImages(ids)
-        images.append(result) 
-    return render_template("create.html",incompletes=incompletes, images = images)
+        advert_id = incomplete[0]
+        result = query.get_images(advert_id)
+        images.append(result)
 
-@app.route("/newAdvertisement", methods=["POST"])
-def newAdvertisement():
-    advertisement_id = advertisementQuery.newAdvertisement(session["id"])
-    return redirect("/editAdvertisement/"+str(advertisement_id))
-#############
-@app.route("/editAdvertisement/<int:id>", methods =["GET"])
-def editAdvertisement(id):
-    images = advertisementQuery.fetchImages(id)  
-    advertisement = advertisementQuery.getIncomplete(session["id"], id)
+    return render_template("create.html",advertisements=incompletes, images = images)
+
+@app.route("/advertisement/new", methods=["POST"])
+def new_adv():
+    advertisement_id = query.advert_new(session["id"])
+    return redirect("/advertisement/edit/"+str(advertisement_id))
+
+@app.route("/advertisement/edit/<int:id>", methods =["GET"])
+def edit_adv(id):
+    images = query.get_images(id)  
+    advertisement = query.get_advert_incomplete(session["id"], id)
 
     return render_template("edit.html", header=advertisement[5], images = images, content= advertisement[7], price = advertisement[6], advertisement_id = id)
 
-@app.route("/delete/<int:id>")
-def delete(id):
-    advertisementQuery.removeAdvertisement(id,session["id"])
-    return redirect("/create")
+@app.route("/advertisement/delete/<int:id>")
+def delete_adv(id):
+    query.advert_remove(id,session["id"])
+    if 'url' in session:
+        return redirect(session['url'])
+
+    return redirect("/") 
 
 @app.route("/handleRedirect", methods=["POST"])
 def handle():
     advertisement_id = request.form["id"]
     if "delete" in request.form:
-        return redirect("/delete/"+str(advertisement_id)) 
+        return redirect("/advertisement/delete/"+str(advertisement_id)) 
     if "edit" in request.form:
-        return redirect("/editAdvertisement/"+str(advertisement_id))
-@app.route("/updateAdvertisement", methods=["POST"])
-def modify():
+        return redirect("/advertisement/edit/"+str(advertisement_id))
+
+@app.route("/advertisement/update", methods=["POST"])
+def update_adv():
     id = request.form["id"]
     content= request.form["text"]
     header = request.form["header"]
     price = request.form["price"]
 
-    advertisementQuery.updateContent(content, header, price, id)    
+    query.advert_update(content, header, price, id)    
 
     if "publish" in request.form:
         print("publish")
-        advertisementQuery.publish(id, session["id"])
+        query.advert_publish(id, session["id"])
         return redirect("/show/advertisement/"+str(id))
     if "upload" in request.form:
         print("upload image")
         file = request.files["image"]
-        advertisementQuery.sendimage(id, file)
+        query.image_save(id, file)
 
-    return redirect("/editAdvertisement/"+str(id))
+    return redirect("/advertisement/edit/"+str(id))
 
 @app.route("/show/advertisement/<int:id>")
-def show_advertsiment(id):
-    advertisement=advertisementQuery.get_advertisement(id)
-    images = advertisementQuery.fetchImages(id)
+def show_adv(id):
+    advertisement=query.get_advert(id)
+    images = query.get_images(id)
 
     return render_template("advertisement.html", header=advertisement[5], images = images, content= advertisement[7], price = advertisement[6], advertisement_id = id)
 
-@app.route("/show/<int:id>")
-def send_img(id):
-    data = advertisementQuery.show_img(id)
+@app.route("/show/image/<int:id>")
+def show_img(id):
+    data = query.image_show(id)
     response = make_response(bytes(data))
     response.headers.set("Content-Type", "image/jpeg")
     return response
