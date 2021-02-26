@@ -3,7 +3,9 @@ from app import app
 import userSession,query
 
 ##UserSession handling
-
+@app.route("/test")
+def a():
+    return render_template("slideshow.html")
 @app.route("/user/profile")
 def profile():
     ## fetch profiles published advertisements
@@ -60,7 +62,11 @@ def logout():
 
 @app.route("/")
 def index():
-    return render_template("index.html" )
+    advertisements = query.get_adverts()
+    images = []
+    for adv in advertisements :
+        images.append(query.get_images(adv[0]))
+    return render_template("index.html", images= images, advertisements = advertisements )
 
 @app.route("/advertisement/unpublished")
 def show_unpub_adv():

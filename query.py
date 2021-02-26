@@ -1,8 +1,11 @@
 from db import db 
 
+def get_adverts():
+    sql  = "SELECT * FROM advertisement"
+    result = db.session.execute(sql)
+    return result.fetchall()
 
 def advert_update(content, header,price, id):
-    print(header)
     sql = "UPDATE advertisement SET content=:content, header=:header, price=:price WHERE id =:id"
     db.session.execute(sql,{"id":id, "content":content, "header":header,"price":price})
     db.session.commit()

@@ -1,0 +1,21 @@
+{% macro slideshow(images,mySlides) %}
+<head>
+  <link rel ="stylesheet" href="/static/css/slideshow.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  
+  <p>Slideshow {{ mySlides}}:</p>
+  <div class="slideshow-container">
+    {% for image in images %}
+      <div class="mySlides{{ mySlides|string }}">
+        <img src="show/image/{{ image[0] }}" style="width:100%">
+      </div>
+    {% endfor %} 
+
+    <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
+  </div>
+
+</body>
+{% endmacro %}

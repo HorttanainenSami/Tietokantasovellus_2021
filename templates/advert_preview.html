@@ -1,0 +1,17 @@
+{% macro advert_preview(images, advertisement, number) %}
+{% import "slideshow.html" as s %}
+  <div class="advert_preview">
+    <form action = "/show/advertisement/{{ advertisement[0] }}" method = "GET">
+      {% if  images|length != 0: %}
+      {{ s.slideshow(images,number) }}
+      {% else %}
+        <img src = "/static/placeholder.png" style = "width:100%">
+      {% endif %}
+
+        <h4><b>{{ advertisement[5]}}</b></h4> 
+          <div class="price"> {{ advertisement[6]}}€/Kk</div>
+        <p>{{ advertisement[7][:200] }}</p>
+        <input type = "hidden" name="id" value = {{advertisement[0]}}>
+    </form>
+  </div>
+{% endmacro %}
