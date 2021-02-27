@@ -30,8 +30,10 @@ def register():
     userSession.handleRegister(username, password)
     return redirect("/login") 
 
-@app.route("/login")
+@app.route("/login", methods = ["POST", "GET"])
 def login():
+    if "recentUrl" in request.form:
+        session["url"]=request.form["recentUrl"]
     return(render_template("login.html"))
 
 @app.route("/login/error")
@@ -47,6 +49,10 @@ def checklogin():
     if user != None:
         session["username"] = user[1]
         session["id"] = user[0] 
+        if 'url' in session:
+            url = session['url']
+            del session['url']
+            return redirect(url)
         return redirect("/")
 
     return redirect("/login/error")
@@ -70,7 +76,6 @@ def index():
 
 @app.route("/advertisement/unpublished")
 def show_unpub_adv():
-    session["url"] = url_for('show_unpub_adv')
     incompletes= query.get_advert_incompletes(session["id"])
     incomplete_ids = []
     images =[]
@@ -96,15 +101,20 @@ def edit_adv(id):
 @app.route("/advertisement/delete/<int:id>")
 def delete_adv(id):
     query.advert_remove(id,session["id"])
+    
     if 'url' in session:
-        return redirect(session['url'])
+        url = session['url']
+        del session['url']
+        return redirect(url)
 
     return redirect("/") 
 
 @app.route("/handleRedirect", methods=["POST"])
 def handle():
     advertisement_id = request.form["id"]
+
     if "delete" in request.form:
+        session['url']=request.form['url']
         return redirect("/advertisement/delete/"+str(advertisement_id)) 
     if "edit" in request.form:
         return redirect("/advertisement/edit/"+str(advertisement_id))
@@ -134,7 +144,7 @@ def show_adv(id):
     advertisement=query.get_advert(id)
     images = query.get_images(id)
 
-    return render_template("advertisement.html", header=advertisement[5], images = images, content= advertisement[7], price = advertisement[6], advertisement_id = id)
+    return render_template("advertisement.html", advertisement= advertisement,  images = images)
 
 @app.route("/show/image/<int:id>")
 def show_img(id):

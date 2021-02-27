@@ -14,7 +14,8 @@
         <hr>
           <input class="button" type = "submit" name = "edit" value = "Muokkaa">
           <input class="button" type = "submit" name = "delete" value = "Poista">
-          <input type = "hidden" name="id" value = {{advertisement[0]}}>
+          <input type = "hidden" name="id" value = {{ advertisement[0] }}>
+          <input type = "hidden" name= "url" value = {{ request.path }}
       </div>
     </form>
   </div>
