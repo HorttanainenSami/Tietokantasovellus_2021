@@ -2,6 +2,7 @@ from flask import redirect, render_template, request, session, make_response, ur
 from app import app
 import userSession, query
 
+
 ##UserSession handling
 @app.route("/user/profile")
 def profile():

@@ -2,16 +2,55 @@
 {% block title %}Advertisement{% endblock %}
 {% block content %}
 <body>
-  <h1>{{ header}}</h1>
-  <h4> hinta : {{ price }} </h4>
+  {% if session["id"] ==  advertisement[1]  %}
+    <h1> olet tämän ilmoituksen omistaja </h1>
+    <form action = "/handleRedirect", method = "POST">
+      <input type = "submit" name = "edit" value = "Muokkaa ilmoitusta">
+      <input type = "hidden" name = "id" value ={{ advertisement[0] }}>
+    </form>
+  {% else %}
+    <h1> Lähetä viesti </h1>
+    {% if "id" in session %}
+      <button id= "myButton" onclick= "myFunction()" >Kirjoita viesti</button>
+      <div id = "message-box">
+
+        <form >
+          <textarea id = "message" name = "message" rows=4 cols = "50" ></textarea> <br>
+          <input type = "submit" name = "sendMessage" value = "Lähetä viesti">
+          <input type = "hidden" name = "advertisement_id" value = {{ advertisement[0] }}>
+          <input type = "hidden" name = "user_id" value = {{ advertisement[1] }}>
+        </form>
+
+      </div> 
+    {% else %}
+      <form action = "/login" method = "POST">
+        <input type = "submit" name = "login" value = "Kirjoita viesti">
+        <input type = "hidden" name = "recentUrl" value = {{ request.path }}> 
+      </form>
+    {% endif %}
+  {% endif %}
+
+
+
+  <h1>{{ advertisement[5]}}</h1>
+  <h4> hinta : {{ advertisement[6]}}€/kk </h4>
 
   {% for image_id in images: %}
     <img src="/show/image/{{ image_id[0] }}" >
   {% endfor %}
   <br>
   <div class = "textbox">
-    {{ content }}
+    {{ advertisement[7]}}
   </div>
 </body>
 
+  <script> 
+
+  function myFunction() {
+      var x = document.getElementById("message-box");
+      var button = document.getElementById("myButton");
+      x.style.display = "block";
+      button.style.display = "none";
+  } 
+  </script>
 {% endblock %}
