@@ -1,7 +1,47 @@
 from flask import redirect, render_template, request, session, make_response, url_for
 from app import app
-import userSession, query
+import userSession, query, chat
 
+@app.route("/user/messages")
+def show_all_chats():
+    chats = chat.chat_get_all(session["id"])
+    return render_template("chats.html", active_chats=chats)
+
+@app.route("/chat/<int:id>")
+def show_chat(id):
+    ## check authority to participate in chat
+
+    messages = chat.chat_getmessages(id, session["id"])
+    if messages == "permission denied":
+        ##add error template
+        return "404"
+    return render_template("chat.html", messages=messages, user=session["id"])
+
+@app.route("/chat/create", methods=["POST"])
+def chat_create():
+    advertisement_id = request.form["advertisement_id"]
+    message = request.form["message"]
+
+    ## check if already active chat
+    chat_id = chat.chat_active(session['id'], advertisement_id)
+    if chat_id != None:
+        #chat_send_message
+        chat_id = chat_id[0]
+        chat.chat_message_send(chat_id, message, session['id'])
+    else:
+        #chat_create_new
+        chat_id = chat.chat_create(session["id"], advertisement_id, message)
+
+    ##fetch created chat and render containing messages
+    chistory = chat.chat_getmessages(advertisement_id, session["id"])
+    ##add func to return advert
+    return redirect("/chat/"+str(chat_id))
+
+@app.route("/chat/sendmessage", methods=["POST"])
+def message_send():
+    url = session['url']
+    del session['url']
+    return redirect("/chat/<int:id>")
 
 ##UserSession handling
 @app.route("/user/profile")

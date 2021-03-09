@@ -14,7 +14,7 @@
       <button id= "myButton" onclick= "myFunction()" >Kirjoita viesti</button>
       <div id = "message-box">
 
-        <form >
+        <form action = "/chat/create" method = "POST">
           <textarea id = "message" name = "message" rows=4 cols = "50" ></textarea> <br>
           <input type = "submit" name = "sendMessage" value = "Lähetä viesti">
           <input type = "hidden" name = "advertisement_id" value = {{ advertisement[0] }}>

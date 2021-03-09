@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="/static/css/chat.css"> 
+<body>
+  <div id = 'chat-box'>
+  <div class = 'chat-message'> 
+    {% for message in messages %}
+    {% if message[1] == user %}
+      <div id = 'own-message'>
+        <div class = 'message'>
+          {{message[3]}}
+        </div>
+      </div>
+    {% else %}
+      <div id = 'others-message'>
+        <div class = 'message'>
+          {{message[3]}}
+        </div>
+      </div>
+    {% endif %}
+    {% endfor %}
+      
+  </div>
+
+  
+  </div>
+</body>
