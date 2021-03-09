@@ -33,3 +33,17 @@ CREATE TABLE images (
   name TEXT,
   data BYTEA
 );
+CREATE TABLE chat (
+  id SERIAL PRIMARY KEY,
+  advertisement_id INTEGER REFERENCES advertisement
+);
+CREATE TABLE participant (
+  chat_id INTEGER REFERENCES chat,
+  participant_id INTEGER REFERENCES users
+);
+CREATE TABLE message (
+  id SERIAL PRIMARY KEY,
+  creator_id INTEGER REFERENCES participant ON DELETE CASCADE,
+  chat_id INTEGER REFERENCES chat,
+  content TEXT
+);
