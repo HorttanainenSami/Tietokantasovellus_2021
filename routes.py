@@ -15,7 +15,7 @@ def show_chat(id):
     if messages == "permission denied":
         ##add error template
         return "404"
-    return render_template("chat.html", messages=messages, user=session["id"])
+    return render_template("chat.html", messages=messages, chat_id=id) 
 
 @app.route("/chat/create", methods=["POST"])
 def chat_create():
@@ -24,7 +24,7 @@ def chat_create():
 
     ## check if already active chat
     chat_id = chat.chat_active(session['id'], advertisement_id)
-    if chat_id != None:
+    if chat_id:
         #chat_send_message
         chat_id = chat_id[0]
         chat.chat_message_send(chat_id, message, session['id'])
@@ -39,9 +39,12 @@ def chat_create():
 
 @app.route("/chat/sendmessage", methods=["POST"])
 def message_send():
-    url = session['url']
-    del session['url']
-    return redirect("/chat/<int:id>")
+    message = request.form['message']
+    print(message)
+    chat_id = request.form['chat_id']
+    print(chat_id)
+    chat.chat_message_send(chat_id, message, session['id'])
+    return redirect('/chat/'+str(chat_id))
 
 ##UserSession handling
 @app.route("/user/profile")

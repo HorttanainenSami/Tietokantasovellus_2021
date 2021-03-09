@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div>
+  <p> Tämä on chats.html </p>
+  {% for chat in active_chats %}
+  <a href = "/chat/{{chat[0]}}">
+    <div class = "preview-chat-box">
+      <div class = "preview-chat-container">
+          <span> {{chat}} </span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+{% endblock %}
