@@ -45,5 +45,7 @@ CREATE TABLE message (
   id SERIAL PRIMARY KEY,
   creator_id INTEGER REFERENCES participant ON DELETE CASCADE,
   chat_id INTEGER REFERENCES chat,
-  content TEXT
+  content TEXT,
+  created_at TIMESTAMP,
+  is_read BOOLEAN 
 );
