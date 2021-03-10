@@ -1,26 +1,33 @@
+{% extends 'layout.html' %}
+{% block title %}Advertisement{% endblock %}
+{% block content %}
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/css/chat.css"> 
 <body>
   <div id = 'chat-box'>
-  <div class = 'chat-message'> 
-    {% for message in messages %}
-    {% if message[1] == user %}
-      <div id = 'own-message'>
-        <div class = 'message'>
-          {{message[3]}}
+    <div class = 'chat-message'> 
+      {% for message in messages %}
+      {% if message[1] ==  session['id'] %}
+        <div id = 'own-message'>
+          <div class = 'message'>
+            {{message[3]}}
+          </div>
         </div>
-      </div>
-    {% else %}
-      <div id = 'others-message'>
-        <div class = 'message'>
-          {{message[3]}}
+      {% else %}
+        <div id = 'others-message'>
+          <div class = 'message'>
+            {{message[3]}}
+          </div>
         </div>
-      </div>
-    {% endif %}
-    {% endfor %}
-      
-  </div>
-
+      {% endif %}
+      {% endfor %}
+    </div>
+    <form action = '/chat/sendmessage' method = 'POST'>
+      <textarea name = 'message' rows = '4' cols = '50'></textarea>
+      <input type = 'submit' value = 'Lähetä'>
+      <input type = 'hidden' name = 'chat_id' value = {{ chat_id }}>
+    </form>
   
   </div>
 </body>
+{% endblock %}
