@@ -1,0 +1,52 @@
+.profile-avatar-container{
+  max-width :100%;
+  background-color: #F5F5DC;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+}
+.profile-avatar-image{
+  border-radius: 400px;
+  max-width: 45%;
+  margin:10px;
+}
+.profile-avatar-container{
+  max-width :100%;
+  background-color: #F5F5DC;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+}
+.profile-avatar-image{
+  border-radius: 400px;
+  max-width: 45%;
+  margin:10px;
+}
+.profile-avatar-data{
+  text-align: center;
+  border-radius: 10px;
+  margin:10px;
+  background-color: #FAEBD7;
+  max-width: 50%;
+  min-width: 50%;
+}
+.profile-sosialmedia-container{
+  background-color: #F5F5DC;
+  height: 100px;
+  margin-top:10px;
+  border-radius: 10px;
+}
+.icon-image {
+ width: 40px;
+  margin-top:30px;
+  margin-left: 30px;
+}
+.profile-pitch {
+  display: inline-block;
+  background-color:#F5F5DC;
+  border-radius:10px;
+  text-align: center;
+  margin-top:10px;
+  width:100%;
+}
+

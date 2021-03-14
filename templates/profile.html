@@ -1,12 +1,51 @@
 {% extends "layout.html" %}
+{% import 'card.html' as form %}
 {% block title %} Profiili {% endblock %}
 {% block content %}
+<link rel = "stylesheet" href="/static/css/profile.css">
 <body>
-  <h1> Profiilisi, {{session["username"]}}</h1>
-  <a href="/" > takaisin </a> 
-
-  <body>
-    <h3> Tekemäsi tontti ilmoitukset</h3>
-    </body>
+  <div class = 'profile-avatar-container'>
+    <img class = 'profile-avatar-image' src="/static/avatar_placeholder.jpeg" alt = "avatar">
+    <div  class = 'profile-avatar-data'>
+      <h1>{{ session["username"] }}</h1>
+      <div class="rating">
+        <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+      </div>
+      <div class = 'personal-info'>
+        <h3> Tiedot </h3>
+        <span> Asuu paikkakunnalla : </span> 
+      </div>
+      <div class = 'verification'>
+        <h3> Tiedot vahvistettu </h3>
+        <span> henkilöllisyys </span> <br>
+        <span> Sähköposti </span><br>
+        <span> puhelinnumero </span><br>
+      </div>
+    </div>
+  </div>
+  <div class = 'profile-sosialmedia-container'>
+    <span> <a  href='facebook.com'><img class = 'icon-image' src ='/static/facebook.svg' alt = 'facebook-icon' ></a> </span>
+    <span><a  href='twitter.com'><img class = 'icon-image' src ='/static/twitter-icon.svg' alt = 'twitter-icon'></a></span>
+    <span><a  href='/message/'><img class = 'icon-image' src ='/static/message-icon.svg' alt = 'message-icon'></a></span>
+  </div>
+    
+  <div class = 'profile-data-container'>
+    <div class = 'profile-pitch'>
+      <h3 class = 'profile'> Tietoa minusta </h3>
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec luctus leo. Quisque id maximus orci, nec dignissim leo. Vivamus eu egestas enim. Donec lacinia turpis nec tellus pharetra, nec condimentum felis faucibus. Pellentesque pharetra ultrices lacus, vel mattis est iaculis non. Donec felis lectus, aliquam eu enim eget, bibendum.
+        </p>
+    </div>
+    <div class = 'profile-advertisement-container'>
+      <h3> Tekemäsi tontti ilmoitukset</h3>
+      {% if advertisements %}
+        {% for advertisement in advertisements %}
+          <p> {{ form.card(images[loop.index0], advertisement) }}</p>
+        {% endfor %}
+      {% else %}
+        <p> Sinulla ei ole julkaistuja tontti ilmoituksia </p>
+      {% endif %}
+    </div>
+  </div>
 </body>
 {% endblock %}

@@ -1,0 +1,44 @@
+.preview-box{
+  position: relative;
+  width: 100%;
+  height: 100px;
+  margin :10px;
+  background-color: #e1d5d5;
+  border-radius: 10px;
+}
+.preview-box:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+.preview {
+  position : absolute;
+  display: inline-block;
+  height: 100%;
+}
+.avatar {
+  width: 100%;
+}
+.avatar>img{
+  height: 100%;
+  border-radius: 50%;
+}
+.message{
+  height: 100%;
+  width: 70%;
+  left: 100px;
+}
+.info{
+  text-align: center;
+  width: 15%;
+  right: 0;
+}
+.notification {
+  background-color: green;
+  border-radius: 50%;
+  position:absolute;
+  left:50%;
+  height: auto;
+  width: 20%;
+}
+.sender {
+  color: grey;
+}

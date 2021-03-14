@@ -1,0 +1,22 @@
+#chat-box{
+  background-color: #DCDCDC;
+  padding:10px;
+  border-radius:10px;
+}
+#others-message{
+  border-radius: 10px;
+  background-color:#FFF0F5;
+  margin:10px;
+  margin-right:200px;
+  
+}
+#own-message {
+  border-radius: 10px;
+  background-color: #3CB371;
+  margin:10px;
+  margin-left:200px;
+}
+.message{
+  padding: 10px;
+}
+

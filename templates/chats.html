@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<link rel = "stylesheet" href = "/static/css/chats.css">
+<div>
+  <p> Tämä on chats.html </p>
+  {% for chat in active_chats %}
+  <a href= "/chat/{{chat[0]}}">
+    <div class = "preview-box">
+      <div class = "preview avatar"><img class = "preview-avatar-img" src="/static/avatar_placeholder.jpeg"> </div>
+      <div class = "preview message">
+        <div class = 'name'><p>{{ chat[2] }}</p></div>
+        <div class = 'content'> {% if chat[7]==session['id'] %}<span class='sender'>You:</span><span> {{ chat[4][:120] }}...</span> 
+          {% else %} <span class='sender'> {{chat[2] }}:</span><span> {{chat[4]}} </span> {% endif %}</div>
+      </div>
+      <div class = "preview info">
+        <div class = 'date'><p>{{ chat[5] }}</p></div>
+        {% if chat[6]!=0 %}<div class = 'notification'> {{ chat[6] }} </div>{% endif %}
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+{% endblock %}
