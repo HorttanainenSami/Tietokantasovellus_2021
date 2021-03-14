@@ -12,9 +12,12 @@ def show_chat(id):
     ## check authority to participate in chat
 
     messages = chat.chat_getmessages(id, session["id"])
+    ## set messages as seen
     if messages == "permission denied":
         ##add error template
         return "404"
+
+    chat.chat_message_setseen(id, session['id'])
     return render_template("chat.html", messages=messages, chat_id=id) 
 
 @app.route("/chat/create", methods=["POST"])
