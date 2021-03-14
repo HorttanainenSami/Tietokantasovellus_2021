@@ -43,7 +43,7 @@ CREATE TABLE participant (
 );
 CREATE TABLE message (
   id SERIAL PRIMARY KEY,
-  creator_id INTEGER REFERENCES participant ON DELETE CASCADE,
+  creator_id INTEGER REFERENCES users ON DELETE CASCADE,
   chat_id INTEGER REFERENCES chat,
   content TEXT,
   created_at TIMESTAMP,
