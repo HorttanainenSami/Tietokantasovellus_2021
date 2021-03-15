@@ -20,14 +20,14 @@ def show_chat(id):
     ##get unread messages and set all messages as seen when entering to chat
     chat.chat_message_setseen(id, session['id'])
     reciver = chat.chat_getparticipant(id, session['id'])
-    def formatDate(date):
+    def format_date(date):
         td = datetime.now()-date
         if timedelta(days=1)>td:
             return date.strftime('%X')
         else:
             return date.strftime('%d/%m/%y %X')
 
-    return render_template("chat.html", messages=messages, chat_id=id, formatdate=formatDate, reciver=reciver)
+    return render_template("chat.html", messages=messages, chat_id=id, formatdate=format_date, reciver=reciver)
 
 @app.route("/chat/create", methods=["POST"])
 def chat_create():
@@ -61,17 +61,15 @@ def message_send():
 ##UserSession handling
 @app.route("/user/profile")
 def profile():
-    ## fetch profiles published advertisements
-    ## fetch images of advertisements
-    session['url'] = url_for('profile')
     pub_adv = query.get_advert_published(session["id"])
-    images = []
-    if pub_adv:
-        for adv in pub_adv:
-            images.append(query.get_images(adv[0]))
+    def get_images(advertisement_id):
+        images = query.get_images(advertisement_id)
+        return images
+    return render_template("profile.html", advertisements=pub_adv, get_images=get_images)
 
-    return render_template("profile.html", advertisements=pub_adv, images=images)
-
+@app.route('/user/profile/<int:id>')
+def profile_show(id):
+    return
 @app.route("/signin")
 def signin():
     return render_template("signin.html")
@@ -125,6 +123,7 @@ def index():
     images = []
     for adv in advertisements:
         images.append(query.get_images(adv[0]))
+        print(images)
     return render_template("index.html", images=images, advertisements=advertisements)
 
 @app.route("/advertisement/unpublished")
