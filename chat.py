@@ -1,4 +1,5 @@
 from db import db
+import datetime
 
 
 
@@ -7,11 +8,16 @@ def chat_getmessages(chat_id, user_id):
     sql = 'SELECT * from participant WHERE chat_id =:chat_id AND participant_id =:p_id'
     result = db.session.execute(sql, {"p_id":user_id, "chat_id":chat_id}).fetchone()
     if result:
-        sql = "SELECT * FROM message WHERE chat_id=:chat_id"
+        sql = "SELECT * FROM message WHERE chat_id=:chat_id ORDER BY created_at"
         result = db.session.execute(sql, {"chat_id":chat_id}).fetchall()
         return result
-
     return "permission denied"
+
+def chat_getparticipant(chat_id, user_id):
+    sql = 'SELECT p.chat_id, u.username FROM participant as p, users as u WHERE p.participant_id=u.id AND p.chat_id=:chat_id AND u.id!=:user_id'
+    result=db.session.execute(sql, {'chat_id':chat_id, 'user_id':user_id})
+    return result.fetchone()
+
 def chat_message_setseen(chat_id, user_id):
     sql = 'UPDATE message SET is_read=TRUE WHERE chat_id=:chat_id AND creator_id!=:user_id'
     db.session.execute(sql, {'chat_id':chat_id, 'user_id':user_id})

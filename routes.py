@@ -1,6 +1,7 @@
 from flask import redirect, render_template, request, session, make_response, url_for
 from app import app
 import userSession, query, chat
+from datetime import datetime, timedelta
 
 @app.route("/user/messages")
 def show_all_chats():
@@ -10,15 +11,23 @@ def show_all_chats():
 @app.route("/chat/<int:id>")
 def show_chat(id):
     ## check authority to participate in chat
-
+    
     messages = chat.chat_getmessages(id, session["id"])
     ## set messages as seen
     if messages == "permission denied":
         ##add error template
-        return "404"
-
+        return "404" 
+    ##get unread messages and set all messages as seen when entering to chat
     chat.chat_message_setseen(id, session['id'])
-    return render_template("chat.html", messages=messages, chat_id=id) 
+    reciver = chat.chat_getparticipant(id, session['id'])
+    def formatDate(date):
+        td = datetime.now()-date
+        if timedelta(days=1)>td:
+            return date.strftime('%X')
+        else:
+            return date.strftime('%d/%m/%y %X')
+
+    return render_template("chat.html", messages=messages, chat_id=id, formatdate=formatDate, reciver=reciver)
 
 @app.route("/chat/create", methods=["POST"])
 def chat_create():

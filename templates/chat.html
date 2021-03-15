@@ -4,20 +4,26 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/css/chat.css"> 
 <body>
+  <div class = 'profile-info'>
+    <h3> {{ reciver[1] }}</h3>
+    </a>
+  </div>
   <div id = 'chat-box'>
     <div class = 'chat-message'> 
       {% for message in messages %}
       {% if message[1] ==  session['id'] %}
         <div id = 'own-message'>
           <div class = 'message'>
-            {{message[3]}}
+            <p>{{message[3]}}</p>
           </div>
+        <div class = 'date'><span> {{formatdate(message[4]) }} </span>{% if message[5]%}<span> &#10004;</span>{% endif %}</div>
         </div>
       {% else %}
         <div id = 'others-message'>
           <div class = 'message'>
-            {{message[3]}}
+            <p> {{message[3]}} </p>
           </div>
+          <div class = 'date'><span> {{formatdate(message[4])}} </span> </div>
         </div>
       {% endif %}
       {% endfor %}

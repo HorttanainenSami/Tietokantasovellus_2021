@@ -19,4 +19,6 @@
 .message{
   padding: 10px;
 }
-
+.date{
+  text-align: right;
+}
