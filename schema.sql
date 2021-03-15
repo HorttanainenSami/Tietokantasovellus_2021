@@ -14,7 +14,10 @@ CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   username TEXT,
   password TEXT,
-  created_at TIMESTAMP
+  created_at TIMESTAMP,
+  avatar BYTEA
+  reside INTEGER REFERENCES localaddress,
+  info TEXT
 );
 
 CREATE TABLE advertisement (
