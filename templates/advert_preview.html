@@ -8,9 +8,8 @@
     <div class="slideshow-container">
       {% if  images|length != 0: %}
         {% for image in images %}
-
           <div class="mySlides{{ number|string }}">
-            <img src="show/image/{{ image[0] }}" style = "width:100%">
+            <img src="/show/image/{{ image[0] }}" style = "width:100%">
           </div>
 
         {% endfor %} 
