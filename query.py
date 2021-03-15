@@ -17,7 +17,7 @@ def advert_new(id):
     return advertisement_id.fetchone()[0]
 
 def get_advert_published(user_id):
-    sql = "SELECT * FROM advertisement WHERE published=TRUE AND user_id=:user_id" 
+    sql ='SELECT * FROM advertisement as a WHERE a.published=TRUE AND a.user_id=:user_id ORDER BY a.published_at' 
     result = db.session.execute(sql, {"user_id":user_id})
     return result.fetchall()
 
@@ -56,7 +56,7 @@ def advert_publish(id, user_id):
     return "OK"
 
 def get_images(id):
-    sql = "SELECT id FROM images WHERE advertisement_id=:id"
+    sql = "SELECT * FROM images WHERE advertisement_id=:id"
     result = db.session.execute(sql, {"id":id})
     return result.fetchall()
 
