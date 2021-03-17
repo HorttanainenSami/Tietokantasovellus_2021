@@ -8,26 +8,25 @@ def show_all_chats():
     chats = chat.chat_get_all(session["id"])
     return render_template("chats.html", active_chats=chats)
 
-@app.route("/chat/<int:id>")
-def show_chat(id):
+@app.route("/chat/<int:chat_id>")
+def show_chat(chat_id):
     ## check authority to participate in chat
-    
-    messages = chat.chat_getmessages(id, session["id"])
+    messages = chat.chat_getmessages(chat_id, session["id"])
     ## set messages as seen
     if messages == "permission denied":
         ##add error template
-        return "404" 
+        return "404"
     ##get unread messages and set all messages as seen when entering to chat
-    chat.chat_message_setseen(id, session['id'])
-    reciver = chat.chat_getparticipant(id, session['id'])
+    chat.chat_message_setseen(chat_id, session['id'])
+    reciver = chat.chat_getparticipant(chat_id, session['id'])
     def format_date(date):
-        td = datetime.now()-date
-        if timedelta(days=1)>td:
+        time_passed = datetime.now()-date
+        if timedelta(days=1) > time_passed:
             return date.strftime('%X')
         else:
             return date.strftime('%d/%m/%y %X')
 
-    return render_template("chat.html", messages=messages, chat_id=id, formatdate=format_date, reciver=reciver)
+    return render_template("chat.html", messages=messages, chat_id=chat_id, formatdate=format_date, reciver=reciver)
 
 @app.route("/chat/create", methods=["POST"])
 def chat_create():
@@ -61,16 +60,49 @@ def message_send():
 ##UserSession handling
 @app.route("/user/profile")
 def profile():
+    profile_data = userSession.get_user(session['id'])
+    avatar = userSession.avatar_get(session['id'])
     pub_adv = query.get_advert_published(session["id"])
     def get_images(advertisement_id):
         images = query.get_images(advertisement_id)
         return images
-    return render_template("profile.html", advertisements=pub_adv, get_images=get_images)
+    return render_template("profile.html", advertisements=pub_adv, get_images=get_images, profile=profile_data, avatar=avatar)
+@app.route('/user/profile/remove', methods=['POST'])
+def profile_delete():
+    ## DELETE ALL 
+    return 
+@app.route('/user/profile/changepassword', methods = ['POST'])
+def profile_change_password():
+    
+    return
+@app.route('/user/profile/modify')
+def profile_modify():
+    profile_data = userSession.get_user(session['id'])
+    avatar = userSession.avatar_get(session['id'])
+    return render_template('profile_modify.html', profile=profile_data, avatar=avatar)
 
+@app.route('/user/profile/avatar/remove', methods=['POST'])
+def remove_avatar():
+    userSession.avatar_remove(session['id'])
+    return redirect('/user/profile/modify')
+
+@app.route('/user/profile/avatar/add', methods=['POST'])
+def add_avatar():
+    file = request.files["file"]
+    userSession.avatar_save(session['id'], file)
+    return redirect('/user/profile/modify')
+
+@app.route('/user/profile/update', methods= ['POST'])
+def update_profile():
+    pitch = request.form['pitch']
+    reside = request.form['reside']
+    userSession.update(pitch, reside, session['id'])
+    return redirect('/user/profile/modify') 
 @app.route('/user/profile/<int:id>')
 def profile_show(id):
     return
 @app.route("/signin")
+
 def signin():
     return render_template("signin.html")
 
