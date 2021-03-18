@@ -3,6 +3,10 @@ from app import app
 import userSession, query, chat
 from datetime import datetime, timedelta
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route("/user/messages")
 def show_all_chats():
     chats = chat.chat_get_all(session["id"])
