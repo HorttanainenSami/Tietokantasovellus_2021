@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session, make_response, url_for
+from flask import redirect, render_template, request, session, make_response, url_for, flash
 from app import app
 import userSession, query, chat
 from datetime import datetime, timedelta
@@ -60,49 +60,76 @@ def message_send():
 ##UserSession handling
 @app.route("/user/profile")
 def profile():
-    profile_data = userSession.get_user(session['id'])
-    avatar = userSession.avatar_get(session['id'])
+    profile = userSession.get_user(session['id'])
     pub_adv = query.get_advert_published(session["id"])
+
     def get_images(advertisement_id):
         images = query.get_images(advertisement_id)
         return images
-    return render_template("profile.html", advertisements=pub_adv, get_images=get_images, profile=profile_data, avatar=avatar)
+
+    return render_template("profile.html", advertisements=pub_adv, get_images=get_images, profile = profile)
+
+@app.route('/user/profile/<int:user_id>')
+def show_profile(user_id):
+    profile = userSession.get_user(user_id)
+    pub_adv = query.get_advert_published(user_id)
+
+    def get_images(advertisement_id):
+        images = query.get_images(advertisement_id)
+        return images
+
+    return render_template("profile.html", advertisements=pub_adv, get_images=get_images, profile=profile)
+
 @app.route('/user/profile/remove', methods=['POST'])
 def profile_delete():
     ## DELETE ALL 
     return 
-@app.route('/user/profile/changepassword', methods = ['POST'])
-def profile_change_password():
-    
-    return
+
+@app.route('/user/profile/changepassword')
+def profile_change_password_form():
+    return render_template('change_password.html')
+
 @app.route('/user/profile/modify')
 def profile_modify():
-    profile_data = userSession.get_user(session['id'])
-    avatar = userSession.avatar_get(session['id'])
-    return render_template('profile_modify.html', profile=profile_data, avatar=avatar)
+    profile = userSession.get_user(session['id'])
+    return render_template('profile_modify.html', profile=profile)
+
+@app.route('/user/changepassword', methods=['POST'])
+def profile_change_password():
+    old = request.form['old_password']
+    new = request.form['new_password']
+    result = userSession.change_password(old, new, session['id'])
+
+    if 'error' in result:
+        flash('Salasanasi oli väärin', 'error')
+        return render_template('change_password.html')
+    
+    flash('Salasanasi on vaihdettu', 'success')
+    return redirect('/user/profile')
 
 @app.route('/user/profile/avatar/remove', methods=['POST'])
 def remove_avatar():
     userSession.avatar_remove(session['id'])
     return redirect('/user/profile/modify')
 
-@app.route('/user/profile/avatar/add', methods=['POST'])
-def add_avatar():
-    file = request.files["file"]
-    userSession.avatar_save(session['id'], file)
-    return redirect('/user/profile/modify')
-
 @app.route('/user/profile/update', methods= ['POST'])
 def update_profile():
+    if 'file' in request.files:
+        file = request.files['file']
+        print(file)
+        userSession.avatar_save(session['id'], file)
+
     pitch = request.form['pitch']
     reside = request.form['reside']
     userSession.update(pitch, reside, session['id'])
     return redirect('/user/profile/modify') 
+
 @app.route('/user/profile/<int:id>')
 def profile_show(id):
-    return
-@app.route("/signin")
+    profile = userSession.get_user(session['id'])
+    return render_template('profile.html', profile=profile)
 
+@app.route("/signin")
 def signin():
     return render_template("signin.html")
 
@@ -119,10 +146,6 @@ def login():
         session["url"] = request.form["recentUrl"]
     return render_template("login.html")
 
-@app.route("/login/error")
-def loginerror():
-    return render_template("loginerror.html")
-
 @app.route("/login/check", methods=["POST"])
 def checklogin():
     username = request.form["username"]
@@ -132,18 +155,20 @@ def checklogin():
     if user:
         session["username"] = user[1]
         session["id"] = user[0]
+        flash('Tervetuloa, '+str(session['username']), 'success')
         if 'url' in session:
             url = session['url']
             del session['url']
             return redirect(url)
         return redirect("/")
-
-    return redirect("/login/error")
+    flash('Käyttäjä ja/tai salasana väärin', 'error')
+    return redirect("/login")
 
 @app.route("/logout")
 def logout():
     del session["username"]
     del session["id"]
+    flash('Olet kirjautunut ulos, nähdään taas pian :)', 'success')
     return redirect("/")
 
 ########################################################

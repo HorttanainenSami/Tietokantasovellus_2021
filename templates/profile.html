@@ -3,48 +3,68 @@
 {% block title %} Profiili {% endblock %}
 {% block content %}
 <link rel = "stylesheet" href="/static/css/profile.css">
-<body>
-  <div class = 'profile-avatar-container'>
-    <img class = 'profile-avatar-image' src="/static/avatar_placeholder.jpeg" alt = "avatar">
-    <div  class = 'profile-avatar-data'>
-      <h1>{{ session["username"] }}</h1>
-      <div class="rating">
-        <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
-      </div>
-      <div class = 'personal-info'>
-        <h3> Tiedot </h3>
-        <span> Asuu paikkakunnalla : </span> 
-      </div>
-      <div class = 'verification'>
-        <h3> Tiedot vahvistettu </h3>
-        <span> henkilöllisyys </span> <br>
-        <span> Sähköposti </span><br>
-        <span> puhelinnumero </span><br>
-      </div>
+{% if profile[0]==session['id'] %}
+  <div class = 'modify-container'>
+    <h2> Muokkaa profiiliasi </h2>
+    <form class='modify-form' action = '/user/profile/modify' method="GET">
+      <input class = 'modify-button' type = 'submit' value = 'muokkaa'>
+      <input type = 'hidden' value ={{ profile[0] }}>
+    </form>
+    <a class = 'change-password' href = '/user/profile/changepassword'>Vaihda salasana</a>
+    <form class = 'modify-form' action='/user/profile/remove' method='POST' onSubmit="return confirm('Oletko varma että haluat poistaa tilisi, kaikki tieto mitä olet tallettanut tullaan poistamaan?');">
+      <input id='remove' class = 'modify-button' type = 'submit' value = 'Poista käyttäjä'>
+      <input type = 'hidden' value ={{ profile[0] }}>
+    </form>
+  </div>
+{% endif %}
+<div class = 'profile-avatar-container'>
+  <div class = 'avatar-image-container'>
+    {% if profile[5] is not none %}
+      <img class = 'profile-avatar-image' src='/show/image/{{profile[5]}}' alt = "avatar">
+    {% else %}
+      <img class = 'profile-avatar-image' src="/static/avatar_placeholder.jpeg" alt = "avatar">
+    {% endif %}
+  </div>
+  <div class = 'profile-avatar-data'>
+    <h2>{{ profile[1] }}</h2>
+    <div class = 'personal-info'>
+      <h3> Tiedot </h3>
+      <p> Asuu paikkakunnalla :<br> 
+      {% if profile[3] is none %}
+        - 
+      {% else %}
+        {{ profile[3] }} </p>  
+      {% endif %}
     </div>
   </div>
-  <div class = 'profile-sosialmedia-container'>
-    <span> <a  href='facebook.com'><img class = 'icon-image' src ='/static/facebook.svg' alt = 'facebook-icon' ></a> </span>
-    <span><a  href='twitter.com'><img class = 'icon-image' src ='/static/twitter-icon.svg' alt = 'twitter-icon'></a></span>
-    <span><a  href='/message/'><img class = 'icon-image' src ='/static/message-icon.svg' alt = 'message-icon'></a></span>
+</div>
+  
+<div class = 'profile-data-container'>
+  <div class = 'profile-pitch'>
+    <h3 class = 'profile'> Tietoa minusta </h3>
+    <p class = 'pitch'>
+      {% if  profile[4] is none %}
+        - 
+      {% else %} 
+        {{ profile[4] }} 
+      {% endif %}
+    </p>  
   </div>
-    
-  <div class = 'profile-data-container'>
-    <div class = 'profile-pitch'>
-      <h3 class = 'profile'> Tietoa minusta </h3>
-      <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec luctus leo. Quisque id maximus orci, nec dignissim leo. Vivamus eu egestas enim. Donec lacinia turpis nec tellus pharetra, nec condimentum felis faucibus. Pellentesque pharetra ultrices lacus, vel mattis est iaculis non. Donec felis lectus, aliquam eu enim eget, bibendum.
-        </p>
-    </div>
-    <div class = 'profile-advertisement-container'>
-      <h3> Tekemäsi tontti ilmoitukset</h3>
-        {% for advertisement in advertisements %}
-        {% set images = get_images(advertisement[0]) %}
-          {{form.advert_preview(images, advertisement,loop.index )}}
-        {% endfor %}
-    </div>
-  </div>
-</body>
+</div>
+
+<div class = 'profile-advertisement-container'>
+  {% if profile %}
+    <h2> Tekemäsi tontti ilmoitukset</h2>
+  {% else %}
+    <h2>Käyttäjän {{ profile[1] }} tekemät ilmoitukset </h2> 
+  {% endif %}
+
+  {% for advertisement in advertisements %}
+  {% set images = get_images(advertisement[0]) %}
+    {{form.advert_preview(images, advertisement,loop.index )}}
+  {% endfor %}
+</div>
+  
   <script>
   var slideIndex = [];
   var slideId = [];
