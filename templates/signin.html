@@ -1,21 +1,24 @@
 {% extends "layout.html" %}
 {% block title %}Luo tunnus{% endblock %}
 {% block content %}
-<body> 
-  <h1> Luo tunnus </h1>
-
-  <form action = "/register" method = "POST">
-    <p> Käyttäjätunnus<br> 
-    <input type = "text" name = "username"></p>
-    <p> Salasana<br>
-    <input type = "password" name = "password"> </p>
-    <input type = "submit" value = "Luo tunnus"> 
+<link rel='stylesheet' href = '/static/css/form.css'>
+<div class='form-container'>
+  <form action = '/register' method = 'POST' onsubmit='return check(this);'>
+    <h2> Luo käyttäjätunnus</h2> 
+    <p> käyttäjätunnus </p>
+    <input type = 'text' name = 'username'>
+    <p> Salasana</p>
+    <input type = 'password' name = 'password'>
+    <input class = 'form-button' type = 'submit' value = 'Luo tunnus'> 
   </from>
-
-</body>
+</div>
   <script>
     function check(form){
-
+      if (form.password.value.length<4){
+        alert('Salasana on liian lyhyt, min 4 merkkiä')
+        return false;
+      }
+      return true;
     }
   </script>
 {% endblock %}
