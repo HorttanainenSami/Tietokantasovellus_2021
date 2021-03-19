@@ -9,20 +9,25 @@ def page_not_found(e):
 
 @app.route("/user/messages")
 def show_all_chats():
-    chats = chat.chat_get_all(session["id"])
-    return render_template("chats.html", active_chats=chats)
+    chats = chat.get_all(session["id"])
+    def format_date(date):
+        time_passed = datetime.now()-date
+        if timedelta(days=1) > time_passed:
+            return date.strftime('%X')
+        else:
+            return date.strftime('%d/%m/%y %X')
+    return render_template("chats.html", active_chats=chats, format_date=format_date)
 
 @app.route("/chat/<int:chat_id>")
 def show_chat(chat_id):
     ## check authority to participate in chat
-    messages = chat.chat_getmessages(chat_id, session["id"])
-    ## set messages as seen
-    if messages == "permission denied":
-        ##add error template
-        return "404"
-    ##get unread messages and set all messages as seen when entering to chat
-    chat.chat_message_setseen(chat_id, session['id'])
-    reciver = chat.chat_getparticipant(chat_id, session['id'])
+    messages = chat.get_messages(chat_id, session["id"])
+    if not messages:
+        return render_template('404.html'), 404
+    profile_info = chat.get_participant(chat_id, session['id'])  
+
+    print(profile_info)
+    print(type(profile_info[2]))
     def format_date(date):
         time_passed = datetime.now()-date
         if timedelta(days=1) > time_passed:
@@ -30,7 +35,7 @@ def show_chat(chat_id):
         else:
             return date.strftime('%d/%m/%y %X')
 
-    return render_template("chat.html", messages=messages, chat_id=chat_id, formatdate=format_date, reciver=reciver)
+    return render_template("chat.html", messages=messages, chat_id=chat_id, formatdate=format_date, profile=profile_info)
 
 @app.route("/chat/create", methods=["POST"])
 def chat_create():
@@ -38,18 +43,15 @@ def chat_create():
     message = request.form["message"]
 
     ## check if already active chat
-    chat_id = chat.chat_active(session['id'], advertisement_id)
+    chat_id = chat.get_active(session['id'], advertisement_id)
     if chat_id:
         #chat_send_message
         chat_id = chat_id[0]
-        chat.chat_message_send(chat_id, message, session['id'])
+        chat.message_send(chat_id, message, session['id'])
     else:
         #chat_create_new
-        chat_id = chat.chat_create(session["id"], advertisement_id, message)
+        chat_id = chat.create(session["id"], advertisement_id, message)
 
-    ##fetch created chat and render containing messages
-    chistory = chat.chat_getmessages(advertisement_id, session["id"])
-    ##add func to return advert
     return redirect("/chat/"+str(chat_id))
 
 @app.route("/chat/sendmessage", methods=["POST"])
@@ -58,7 +60,7 @@ def message_send():
     print(message)
     chat_id = request.form['chat_id']
     print(chat_id)
-    chat.chat_message_send(chat_id, message, session['id'])
+    chat.message_send(chat_id, message, session['id'])
     return redirect('/chat/'+str(chat_id))
 
 ##UserSession handling
@@ -141,7 +143,11 @@ def signin():
 def register():
     username = request.form["username"]
     password = request.form["password"]
-    userSession.handleRegister(username, password)
+    result = userSession.handleRegister(username, password)
+    if 'error' in result:
+        flash('Käyttäjätunnus on jo käytössä', 'error')
+        return redirect('/signin')
+    flash('Käyttäjätunnus on luotu, kirjaudu nyt sisään', 'success')
     return redirect("/login")
 
 @app.route("/login", methods=["POST", "GET"])

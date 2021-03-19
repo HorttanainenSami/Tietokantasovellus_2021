@@ -2,24 +2,57 @@
 {% block title %}Messages{% endblock %}
 {% block content %}
 <link rel = "stylesheet" href = "/static/css/chats.css">
-<div>
-  <p> Tämä on chats.html </p>
+<div class = 'chats-container'>
+  {% if active_chats|length ==0%}
+  <p> Sinulla ei ole aloitettuja viesti ketjuja</p>
+  {% endif %}
   {% for chat in active_chats %}
-  <a href= "/chat/{{chat[0]}}">
-    <div class = "preview-box">
-      <div class = "preview avatar"><img class = "preview-avatar-img" src="/static/avatar_placeholder.jpeg"> </div>
-      <div class = "preview message">
-        <div class = 'name'><p>{{ chat[2] }}</p></div>
-        <div class = 'content'> {% if chat[7]==session['id'] %}<span class='sender'>You:</span><span> {{ chat[4][:120] }}...</span> 
-          {% else %} <span class='sender'> {{chat[2] }}:</span><span> {{chat[4]}} </span> {% endif %}</div>
+
+  <a class = 'preview-box' href ='/chat/{{ chat[0] }}'>
+      
+      <div class = 'avatar'>
+        {% if chat[7] is none %}
+          <img class = "preview-avatar-img" src="/static/avatar_placeholder.jpeg"> 
+        {% else %}
+          <img class = 'preview-avatar-img' src='/show/image/{{ chat[7] }}'>
+        {% endif %}
       </div>
-      <div class = "preview info">
-        <div class = 'date'><p>{{ chat[5] }}</p></div>
-        {% if chat[6]!=0 %}<div class = 'notification'> {{ chat[6] }} </div>{% endif %}
+        
+      <div class='content'> 
+        <div class = 'name'>
+          <h4> {{ chat[1] }} </h4>
+        </div>
+
+        <div class = 'message'>
+            <span class='sender'>
+              {% if chat[6]==session['id'] %}
+                You: 
+              {% else %}
+                {{ chat[1] }}:
+              {% endif %}
+            </span>
+              <span>{{ chat[3][:100] }}...</span> 
+        </div>
       </div>
-    </div>
+      
+      <div class = 'info'>
+
+        <div class = 'date'>
+          <p>{{ format_date(chat[4]) }}</p>
+        </div>
+
+        <div class = 'notification'>
+          {% if chat[5]!=0 %}
+            {% if chat[5] == 1 %}
+              <p>{{ chat[5] }} lukematon viesti </p>
+            {% else %}
+              <p>{{ chat[5] }} lukematonta viestiä </p>
+            {% endif %}
+          {% endif %}
+
+        </div>
+      </div>
   </a>
   {% endfor %}
 </div>
-
 {% endblock %}

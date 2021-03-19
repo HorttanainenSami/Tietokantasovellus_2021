@@ -1,4 +1,40 @@
+.container {
+  background-color: #cabfbf;
+}
+.profile-info{
+  display: flex;
+  justify-content: space-between;
+  margin-top:30px;
+}
+.info-container1>img{
+  height: 120px;
+}
+.info-container1>h3{
+  padding:20px;
+}
+.info-container1,.info-container2{
+  min-width: 300px;;
+  border:0;
+  height: 140px;
+    background-color: #DCDCDC;
+  border-radius: 10px;
+  padding: 10px;
+}
+.info-container1 {
+  display: flex;
+}
+.info-container1:hover,.info-container2:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+.info-container>img{
+  height: 120px;
+  border-radius: 50%;
+}
+.info-container>h3{
+  margin:30px;
+}
 #chat-box{
+  margin-top:30px;
   background-color: #DCDCDC;
   padding:10px;
   border-radius:10px;
