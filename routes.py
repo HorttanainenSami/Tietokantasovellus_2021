@@ -117,8 +117,8 @@ def update_profile():
         file = request.files['file']
         user.avatar_save(session['id'], file)
     pitch = request.form['pitch']
-    reside = request.form['reside']
-    user.update(pitch, reside, session['id'])
+    region = request.form['region']
+    user.update(pitch, region, session['id'])
     return redirect('/user/profile/modify') 
 
 @app.route('/signin')

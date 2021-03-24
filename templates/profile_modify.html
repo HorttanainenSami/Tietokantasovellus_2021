@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% import 'region.html' as select %}
 {% block title %} Muokkaa profiilia {% endblock %}
 {% block content %}
 <link rel = 'stylesheet' href='/static/css/profile.css'>
@@ -18,7 +19,7 @@
       <input class = 'modify-button' type = 'submit' name = 'save' value = 'Tallenna muutokset'>
     </form>
 
-    <form action = '/user/profile' method='GET'>
+    <form action = '/user/profile/{{ profile[0] }}' method='GET'>
       <input class = 'modify-button' type = 'submit' name = 'return' value = 'Palaa takaisin'>
     </form>
   </div>
@@ -26,7 +27,7 @@
   <div class = 'profile-avatar-container'>
     <div class = 'avatar-image-container'>
       {% if profile[5] is not none %}
-        <img class = 'profile-avatar-image' src='/show/image/{{ profile[5 ]}}' alt = 'avatar'>
+        <img class = 'profile-avatar-image' src='/show/image/{{ profile[5] }}' alt = 'avatar'>
       {% else %}
         <img class = 'profile-avatar-image' src = '/static/avatar_placeholder.jpeg' alt ='avatar-placeholder'>
       {% endif %}
@@ -37,7 +38,9 @@
       <div class = 'personal-info'>
         <h3> Tiedot </h3>
         <p> Asuu paikkakunnalla :</p> 
-        <input form = 'save' type='text' name='reside' value='{{ profile[3] }}'>  
+        <select form ='save' name ='region'>
+          {{ select.region() }}
+        </select>
       </div>
     </div>
 
@@ -54,10 +57,6 @@
 
 <script>
   function check(form) {
-    if (form.reside.value.length>40){
-      alert('Asuinpaikka on liian pitkä')
-      return false
-    }
     if (form.pitch.value.length >500){
       alert('Kerro tietoa minusta: Viesti liian pitkä')
       return false;
