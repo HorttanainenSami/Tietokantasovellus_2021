@@ -2,12 +2,12 @@ from db import db
 
 def search(region, min, max):
     sql  = 'SELECT id, published_at, header, price, content'\
-    ' FROM advertisement WHERE published=true AND region=:region AND price BETWEEN :min AND :max ORDER BY published_at'
+    ' FROM advertisement WHERE published=true AND region=:region AND price BETWEEN :min AND :max ORDER BY published_at DESC'
     result = db.session.execute(sql, {'region':region, 'min':min, 'max':max})
     return result.fetchall()
 
 def get_all():
-    sql  = 'SELECT id, published_at, header, price, content FROM advertisement WHERE published=true ORDER BY published_at'
+    sql  = 'SELECT id, published_at, header, price, content FROM advertisement WHERE published=true ORDER BY published_at DESC'
     result = db.session.execute(sql)
     return result.fetchall()
 
