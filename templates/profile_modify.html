@@ -1,0 +1,72 @@
+{% extends 'layout.html' %}
+{% block title %} Muokkaa profiilia {% endblock %}
+{% block content %}
+<link rel = 'stylesheet' href='/static/css/profile.css'>
+<body>
+  <div class = 'modify-container'>
+    <h2> Muokkaa profiiliasi </h2>
+
+    {% if profile[5] is none %}
+      <input form = 'save' class = 'modify-button' type = 'file' name = 'file'>
+    {% else %}
+      <form action='/user/profile/avatar/remove' method='POST'>
+        <input class = 'modify-button' type='submit' name = 'remove-avatar' value='poista kuva'>
+      </form>
+    {% endif %}
+
+    <form id = 'save' action='/user/profile/update' onsubmit='return check(this)' method='POST' enctype = 'multipart/form-data'>
+      <input class = 'modify-button' type = 'submit' name = 'save' value = 'Tallenna muutokset'>
+    </form>
+
+    <form action = '/user/profile' method='GET'>
+      <input class = 'modify-button' type = 'submit' name = 'return' value = 'Palaa takaisin'>
+    </form>
+  </div>
+
+  <div class = 'profile-avatar-container'>
+    <div class = 'avatar-image-container'>
+      {% if profile[5] is not none %}
+        <img class = 'profile-avatar-image' src='/show/image/{{ profile[5 ]}}' alt = 'avatar'>
+      {% else %}
+        <img class = 'profile-avatar-image' src = '/static/avatar_placeholder.jpeg' alt ='avatar-placeholder'>
+      {% endif %}
+    </div>
+
+    <div class = 'profile-avatar-data'>
+      <h2>{{ profile[1] }}</h2>
+      <div class = 'personal-info'>
+        <h3> Tiedot </h3>
+        <p> Asuu paikkakunnalla :</p> 
+        <input form = 'save' type='text' name='reside' value='{{ profile[3] }}'>  
+      </div>
+    </div>
+
+  </div>
+    
+  <div class = 'profile-data-container'>
+    <div class = 'profile-pitch'>
+      <h2 class = 'profile'> Kerro itsestäsi </h2>
+      <p id='words-counter'> </p>
+        <textarea form='save' placeholder='Kerro jotain itsestäsi' onkeyup='countWords(this);' name = 'pitch' cols ='80' rows ='10'>{{ profile[4] }}</textarea>
+    </div>
+</div>
+</body>
+
+<script>
+  function check(form) {
+    if (form.reside.value.length>40){
+      alert('Asuinpaikka on liian pitkä')
+      return false
+    }
+    if (form.pitch.value.length >500){
+      alert('Kerro tietoa minusta: Viesti liian pitkä')
+      return false;
+    }
+    return true;
+  }
+  function countWords(self) {
+      document.getElementById('words-counter').innerHTML = self.value.length + '/500 kirjainta';
+  }
+</script>
+{% endblock %}
+

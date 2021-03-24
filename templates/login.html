@@ -1,18 +1,25 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% block title %} Kirjaudu sisään {% endblock %}
 {% block content %}
-<body> 
-  <h1> Kirjaudu sisään </h1>
-  <hr>
-  <form action="/login/check" method="POST">
-    <p> Käyttäjätili: 
-    <input type= "text" name ="username"></p>
-    <p> Salasana:
-    <input type= "password" name = "password"></p>
-    <input type = "submit" value = "Kirjaudu"> 
-  </form>
-  <p> Etkö omista tunnusta?<br> 
-  <a href="/signin"> Luo tunnus tästä! </a></p>
+<link rel = 'stylesheet' href = '/static/css/form.css'>
 
-</body>
+<div class='form-container'>
+
+  <form action='/login/check' method='POST'>
+    <h2> Kirjaudu sisään </h2>
+
+    <p> Käyttäjätili: </p>
+    <input type= 'text' name ='username'>
+    <p> Salasana:</p>
+    <input type= 'password' name = 'password'>
+    <br>
+    <input class = 'form-button' type = 'submit' value = 'Kirjaudu'> 
+
+    <div>
+      <p> Etkö omista tunnusta?<br> 
+      <a href='/signin'> Luo tunnus tästä! </a></p>
+    </div>
+  </form>
+
+</div>
 {% endblock %}

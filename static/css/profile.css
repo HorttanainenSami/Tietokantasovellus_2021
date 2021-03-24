@@ -1,52 +1,73 @@
+.modify-container,.profile-avatar-container,.profile-data-container, .profile-advertisement-container {
+  margin-top:30px;
+  background-color: #cabfbf;
+  border-radius: 10px;
+  padding: 10px;
+}
+.modify-container,.profile-avatar-container,.profile-data-container, .profile-advertisement-container>h2{
+  text-align: center;
+}
+.modify-container{
+  height: 110px;
+}
+.modify-container>form{
+  display: inline-block;
+}
+.modify-button,.change-password{
+  background-color: #9d9595;
+  border:0;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+.change-password{
+  color: black;
+  text-decoration: none;
+}
+#remove {
+  margin-left: 100px;
+  background-color: #ff7f7f;
+}
+#remove:hover{
+  background-color: #ff0000;
+}
+.modify-button:hover,.change-password:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
 .profile-avatar-container{
   max-width :100%;
-  background-color: #F5F5DC;
   display: flex;
   justify-content: center;
-  border-radius: 10px;
+  min-height: 300px;
+}
+.avatar-image-container {
+  width:100%;
 }
 .profile-avatar-image{
-  border-radius: 400px;
-  max-width: 45%;
-  margin:10px;
-}
-.profile-avatar-container{
-  max-width :100%;
-  background-color: #F5F5DC;
-  display: flex;
-  justify-content: center;
-  border-radius: 10px;
-}
-.profile-avatar-image{
-  border-radius: 400px;
-  max-width: 45%;
-  margin:10px;
+  padding: 5px;
+  position: relative;
+  left: 1;
+  border-radius: 100%;
+  max-width:100%;
 }
 .profile-avatar-data{
-  text-align: center;
   border-radius: 10px;
   margin:10px;
-  background-color: #FAEBD7;
+  background-color: #e7dddd;
   max-width: 50%;
   min-width: 50%;
 }
-.profile-sosialmedia-container{
-  background-color: #F5F5DC;
-  height: 100px;
-  margin-top:10px;
-  border-radius: 10px;
-}
-.icon-image {
- width: 40px;
-  margin-top:30px;
-  margin-left: 30px;
-}
 .profile-pitch {
-  display: inline-block;
-  background-color:#F5F5DC;
+  padding: 5px;
+  margin:10px;
+  background-color:#cabfbf;
   border-radius:10px;
-  text-align: center;
-  margin-top:10px;
-  width:100%;
+  max-width:100%;
 }
-
+.pitch {
+  margin:10px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #e7dddd;
+  word-wrap: break-word;
+}

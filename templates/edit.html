@@ -1,39 +1,95 @@
-{% extends "layout.html" %}
-{% block title %}Muokkaa ilmoitustasi{% endblock %}
+{% extends 'layout.html' %}
+{% import 'region.html' as select %}
+{% block title %}Advertisement{% endblock %}
 {% block content %}
-<body>
-  <hr> 
-  <form action = "/advertisement/update" method = "POST" enctype = "multipart/form-data">
-    <p> Lisää otsikko <br>
-    <textArea name ="header" id ="1" placeholder = "Lisää tähän otsikkosi">{{ header }}</textArea></p>
+<link rel='stylesheet' href='/static/css/property.css'>
+<link rel='stylesheet' href='/static/css/slideshow.css'>
+<link rel='stylesheet' href='/static/css/property_edit.css'>
 
-    <div class="box"> 
-    {% for image in images %}
-    <div class = "column"> 
-      <img src="/show/image/{{ image[0] }}" alt = "pictures" width=300 height = 200>
-    </div>
-    {% endfor %}
-
-    </div>
-    <p> Lisää kuva ilmoituksellesi<br>
-    <input type = "file" name = "image">
-    <input type = "submit" name = "upload" value = "Lisää kuva"></p>
-    <br>
-    <p> Pyyntöhinta<br>
-    <input type="text" name = "price" value={{ price }}> €/Kuukausi
-    <br>
-    <p> Teksti alue: <br> 
-    <textArea name = "text" id = "2" placeholder = "Lisää esittely ilmoituksellesi" rows="10" cols = "50">{{ content}}</textArea> </p><br>
-    <input type = "submit" name = "save" value = "Tallenna muutokset">
-    <br>
-    <input type = "submit" name = "publish" value = "Julkaise ilmoitus"></p>
-    <input type = "hidden" name = "id" value = {{ advertisement_id }} > 
-    <br><hr>
+<div class ='button-container'>
+  <form action='/advertisement/publish' method='POST'>
+    <input class ='button' type='submit' value='Julkaise ilmoitus'>
+    <input type='hidden' name ='advert_id' value={{ advertisement[0] }}>
   </form>
-    <form action = "/handleRedirect" method = "POST">
-    <input type = "submit" name = "delete" value = "Poista ilmoituksesi">
-    <input type = "hidden" name = "id" value = {{ advertisement_id }} > 
-  </form>
-</body>
-{% endblock %}
 
+  <form id='save' action='/advertisement/update' method ='POST' enctype= 'multipart/form-data' >
+    <input class= 'button' type ='submit' value ='Tallenna muutokset'> 
+    <input class ='button' type='file' name ='file' value='Lisää kuva'>
+    <input type='hidden' name ='id' value ={{advertisement[0]}}>
+  </form>
+
+
+  <form action='/advertisement/delete' method='POST'>
+    <input class='button' type='submit' value='Poista ilmoitus'>
+    <input type='hidden' name ='id' value ={{advertisement[0]}}> 
+  </form>
+</div>
+
+<div class = 'modify-container'>
+  <div class = 'image-container'>
+    {% if images|length != 0: %}
+      {% for image_id in images: %}
+        <div class='mySlides'> 
+          <div class = 'numbertext'> {{loop.index}} / {{images|length}}</div>
+          <img class='slider-image' src='/show/image/{{ image_id[0] }}' >
+          <form action='/advertisement/image/delete'  method='POST'>
+            <input class='button' type= 'submit' value='Poista kuva'>
+            <input type='hidden' name='img-id' value={{image_id[0]}}>
+            <input type='hidden' name='advertisement_id' value={{advertisement[0]}}>
+          </form>
+        </div>
+      {% endfor %}
+      <div class ='slide-button-container'>
+        <a class='prev' onclick='plusSlides(-1)'>&#10094;</a>
+        <a class='next' onclick='plusSlides(1)'>&#10095;</a>
+      </div>
+      {% else %}
+      <div>
+        <img class='slider-image' src='/static/placeholder.png'>
+      </div>
+      {% endif %}
+  </div>
+
+  <div class='info'>
+    <p> otsikko:</p>
+    <h2><input form ='save' type='text' name='header' value ={{ advertisement[2]}}></h2>
+    <p> hinta :<input form='save' type='number' id='price' name ='price' value={{ advertisement[3]}}>€/kk </p>
+    <select form ='save' name ='region'>
+      {{ select.region() }}
+    </select>
+  </div>
+
+  <div class = 'textbox'>
+    <h2> Teksti </h2>
+    <textarea form='save' name='content'> {{ advertisement[4]}}</textarea>
+  </div>
+</div>
+
+  <script> 
+  var slideIndex = 1;
+  showSlides(slideIndex);
+
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+
+
+  function showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName('mySlides');
+    if (n > slides.length) {slideIndex = 1}    
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = 'none';
+    }
+    if(slides.length===0) return;
+    slides[slideIndex-1].style.display = 'block';  
+  }
+    function myFunction() {
+        var x = document.getElementById('message-box');
+        var button = document.getElementById('myButton');
+        x.style.display = 'block';
+        button.style.display = 'none';
+    } 
+  </script>
+  {% endblock %}

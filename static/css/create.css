@@ -1,0 +1,31 @@
+.create-container{
+  min-height: 200px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-top:30px;
+  background-color: #cabfbf;
+  border-radius: 10px;
+  padding: 10px;
+}
+.unfinished-container{
+  min-height: 200px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top:30px;
+  background-color: #cabfbf;
+  border-radius: 10px;
+  padding: 30px;
+}
+.create-button {
+   background-color: #9d9595;
+  border:0;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+.create-button:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}

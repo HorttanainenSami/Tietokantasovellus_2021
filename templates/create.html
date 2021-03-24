@@ -1,28 +1,55 @@
-{% extends "layout.html" %}
-{% import "card.html" as form %}
+{% extends 'layout.html' %}
+{% import 'card.html' as form %}
 {% block title %}Luo uusi ilmoitus {% endblock %}
 {% block content %}
 
-
-<body>
-  <h1> Luo uusi ilmoitus tontillesi</h1>
-  <br><p>
-  <form action ="/advertisement/new" method = "POST"> 
-    <input class="button" type = "submit" value ="Luo uusi ilmoitus"></p>
-  </form>
-  <h1> Keskeneräiset ilmoituksesi </h1>
-  {% if advertisements: %}
-  <p>Sinulla on {{ advertisements|length }} keskeneräistä ilmoitusta julkaisematta</p> 
+<head>
+  <link rel ='stylesheet' href='/static/css/advertisementcard.css'>
+  <link rel ='stylesheet' href='/static/css/create.css'>
+  <link rel ='stylesheet' href='/static/css/slideshow.css'>
+</head>
+<div class = 'div-container'>
   
-  {% for advertisement in advertisements%}
-    {{ form.card(images[loop.index0], advertisement) }}
-    <br>
-  {% endfor %}
+  <div class = 'create-container'>
+    <h2> Luo uusi ilmoitus tontillesi</h2>
+    <form action ='/advertisement/new' method = 'POST'> 
+      <input class='create-button' type = 'submit' value ='Luo uusi ilmoitus'>
+    </form>
+  </div>
 
-  {% else %}
-    <p> Sinulla ei ole keskeneräisiä ilmoituksia<br>
-  {% endif %}
-</body>
+  <div class ='unfinished-container'>
+    <h2> Keskeneräiset ilmoituksesi </h2>
+    {% for advertisement in advertisements %}
+        {{ form.card(images[loop.index0], advertisement, loop.index) }}
+    {% endfor %}
+  </div>
 
+</div>
+  <script>
+    var slideIndex = [];
+    var slideId = [];
+    for(i = 1; i<={{images|length}};i++){
+        slideIndex.push(1);
+        slideId.push('mySlides'+i)
+        showSlides(1,i-1);
+      }
+    function plusSlides(n, no) {
+      showSlides(slideIndex[no] += n, no);
+    }
+
+    function showSlides(n, no) {
+      var i;
+      var x = document.getElementsByClassName(slideId[no]);
+      if (n > x.length) {slideIndex[no] = 1}    
+      if (n < 1) {slideIndex[no] = x.length}
+      for (i = 0; i < x.length; i++) {
+         x[i].style.display = 'none';  
+      }
+      if(x.length ==0){
+        return;
+      }
+      x[slideIndex[no]-1].style.display = 'block';  
+    }
+  </script>
 {% endblock %}
 
