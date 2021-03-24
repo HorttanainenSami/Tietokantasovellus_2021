@@ -104,7 +104,7 @@ def profile_change_password():
         return render_template('change_password.html')
     
     flash('Salasanasi on vaihdettu', 'success')
-    return redirect('/user/profile')
+    return redirect('/user/profile/'+str(session['id']))
 
 @app.route('/user/profile/avatar/remove', methods=['POST'])
 def remove_avatar():
