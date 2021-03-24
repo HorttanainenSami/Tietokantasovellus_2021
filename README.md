@@ -2,8 +2,9 @@
 
 ## Sovelluksen kuvaus
 Tonttien vuokraus palvelu.
-Ideana on että sovelluksessa voidaan tarjota ylimääräisenä oleva tontti muiden käyttöön vuokraa vastaan. Sovellukseen pystytään lisäämään 
-Sivulla voidaan tarjota tontteja vuokrattavaksi
+
+Ideana on että sovelluksessa voidaan tarjota ylimääräisenä oleva tontti muiden käyttöön vuokraa vastaan. Sovellukseen pystytään lisäämään.
+
 
 
  Sovelluksessa voidaan:
@@ -18,6 +19,8 @@ Sivulla voidaan tarjota tontteja vuokrattavaksi
 
 
 ## Testaus
+- [heroku](https://tsoha-tontti-vuokraus.herokuapp.com/)
+- [Ohjeet](https://github.com/HorttanainenSami/Tietokantasovellus_2021/blob/main/documents/testi.md)
 
 ## 
  - Flask
