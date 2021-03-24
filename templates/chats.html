@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% block title %}Messages{% endblock %}
 {% block content %}
-<link rel = "stylesheet" href = "/static/css/chats.css">
+<link rel = 'stylesheet' href = '/static/css/chats.css'>
 <div class = 'chats-container'>
   {% if active_chats|length ==0%}
   <p> Sinulla ei ole aloitettuja viesti ketjuja</p>
@@ -12,7 +12,7 @@
       
       <div class = 'avatar'>
         {% if chat[6] is none %}
-          <img class = "preview-avatar-img" src="/static/avatar_placeholder.jpeg"> 
+          <img class = 'preview-avatar-img' src='/static/avatar_placeholder.jpeg'> 
         {% else %}
           <img class = 'preview-avatar-img' src='/show/image/{{ chat[6] }}'>
         {% endif %}

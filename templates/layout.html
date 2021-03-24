@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="/static/css/main.css"> 
+<link rel='stylesheet' href='/static/css/main.css'> 
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 
 <title> Tonttien vuokraus sovellus - {% block title %}{% endblock %} </title>
@@ -9,15 +9,15 @@
 
     <h1> Tonttien vuokraus sovellus </h1>
     <div class ='navbar'>
-      <a class='button' href = "/"> Etusivu</a>
+      <a class='button' href = '/'> Etusivu</a>
 
       {% if session.username %}
-        <a class='button' href = "/advertisement/unpublished"> Luo uusi ilmoitus </a>
-        <a class='button' href = "/user/profile"> Näytä profiili </a>
-        <a class='button' href = "/user/messages"> Näytä viestit </a>
-        <a class='button' href = "/logout"> Kirjaudu ulos</a>
+        <a class='button' href = '/advertisement/unpublished'> Luo uusi ilmoitus </a>
+        <a class='button' href = '/user/profile/{{session['id']}}'> Näytä profiili </a>
+        <a class='button' href = '/user/messages'> Näytä viestit </a>
+        <a class='button' href = '/logout'> Kirjaudu ulos</a>
       {% else %}
-        <a class='button' href = "/login"> Kirjaudu sisään </a>
+        <a class='button' href = '/login'> Kirjaudu sisään </a>
       {% endif %}
       
     </div>

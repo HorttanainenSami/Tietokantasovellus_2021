@@ -1,20 +1,20 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% import 'card.html' as form %}
 {% block title %} Profiili {% endblock %}
 {% block content %}
-<link rel = "stylesheet" href="/static/css/profile.css">
+<link rel = 'stylesheet' href='/static/css/profile.css'>
 <link rel = 'stylesheet' href='/static/css/advertisementcard.css'>
 <link rel ='stylesheet' href='/static/css/slideshow.css'>
 
 {% if profile[0]==session['id'] %}
   <div class = 'modify-container'>
     <h2> Muokkaa profiiliasi </h2>
-    <form class='modify-form' action = '/user/profile/modify' method="GET">
+    <form class='modify-form' action = '/user/profile/modify' method='GET'>
       <input class = 'modify-button' type = 'submit' value = 'muokkaa'>
       <input type = 'hidden' value ={{ profile[0] }}>
     </form>
     <a class = 'change-password' href = '/user/profile/changepassword'>Vaihda salasana</a>
-    <form class = 'modify-form' action='/user/profile/remove' method='POST' onSubmit="return confirm('Oletko varma että haluat poistaa tilisi, kaikki tieto mitä olet tallettanut tullaan poistamaan?');">
+    <form class = 'modify-form' action='/user/profile/remove' method='POST' onSubmit='return confirm("Oletko varma että haluat poistaa tilisi, kaikki tieto mitä olet tallettanut tullaan poistamaan?");'>
       <input id='remove' class = 'modify-button' type = 'submit' value = 'Poista käyttäjä'>
       <input type = 'hidden' value ={{ profile[0] }}>
     </form>
@@ -23,9 +23,9 @@
 <div class = 'profile-avatar-container'>
   <div class = 'avatar-image-container'>
     {% if profile[5] is not none %}
-      <img class = 'profile-avatar-image' src='/show/image/{{profile[5]}}' alt = "avatar">
+      <img class = 'profile-avatar-image' src='/show/image/{{profile[5]}}' alt = 'avatar'>
     {% else %}
-      <img class = 'profile-avatar-image' src="/static/avatar_placeholder.jpeg" alt = "avatar">
+      <img class = 'profile-avatar-image' src='/static/avatar_placeholder.jpeg' alt = 'avatar'>
     {% endif %}
   </div>
   <div class = 'profile-avatar-data'>
@@ -72,7 +72,7 @@ var slideIndex = [];
 var slideId = [];
 for(i = 1; i<={{images|length}};i++){
     slideIndex.push(1);
-    slideId.push("mySlides"+i)
+    slideId.push('mySlides'+i)
     showSlides(1,i-1);
   }
 function plusSlides(n, no) {
@@ -85,12 +85,12 @@ function showSlides(n, no) {
   if (n > x.length) {slideIndex[no] = 1}    
   if (n < 1) {slideIndex[no] = x.length}
   for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";  
+     x[i].style.display = 'none';  
   }
   if(x.length ==0){
     return;
   }
-  x[slideIndex[no]-1].style.display = "block";  
+  x[slideIndex[no]-1].style.display = 'block';  
 }
 </script>
 {% endblock %}

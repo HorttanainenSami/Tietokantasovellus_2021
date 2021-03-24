@@ -1,16 +1,13 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% block title %}Advertisement{% endblock %}
 {% block content %}
 <link rel='stylesheet' href='/static/css/property.css'>
 <link rel='stylesheet' href='/static/css/slideshow.css'>
 
-  {% if session["id"] ==  advertisement[1]  %}
+  {% if session['id'] ==  advertisement[1]  %}
     <div class ='modify-container'>
-      <h2> olet tämän ilmoituksen omistaja </h2>
-      <form action = "/handleRedirect", method = "POST">
-        <input class='button' type = "submit" name = "edit" value = "Muokkaa ilmoitusta">
-        <input type = "hidden" name = "id" value ={{ advertisement[0] }}>
-      </form>
+      <h2> Olet tämän ilmoituksen omistaja </h2>
+        <a class='button' href='/advertisement/edit/{{advertisement[0]}}'>Muokkaa ilmoitusta </a>
   </div>
   {% endif %}
 
@@ -23,12 +20,12 @@
       {% for image_id in images: %}
         <div class='mySlides'> 
           <div class = 'numbertext'> {{loop.index}} / {{images|length}}</div>
-          <img class='slider-image' src="/show/image/{{ image_id[0] }}" >
+          <img class='slider-image' src='/show/image/{{ image_id[0] }}' >
         </div>
       {% endfor %}
       <div class ='slide-button-container'>
-        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        <a class='prev' onclick='plusSlides(-1)'>&#10094;</a>
+        <a class='next' onclick='plusSlides(1)'>&#10095;</a>
       </div>
       {% else %}
       <div>
@@ -57,35 +54,35 @@
     </div>
   </div>
 
-  <div class = "textbox">
+  <div class = 'textbox'>
     <h2> Teksti </h2>
     <p> {{ advertisement[4]}}</p>
   </div>
 
-  {% if session["id"] !=  advertisement[1]  %}
+  {% if session['id'] !=  advertisement[1]  %}
   <div class = 'profile-container'>
 
     <div class ='message-container'>
       <h2> Lähetä viesti </h2>
-      {% if "id" in session %}
-        <input type ='submit' id= "myButton" onsubmit='myfunction();' class='button' onclick= "myFunction()" value ='Kirjoita viesti' >
+      {% if 'id' in session %}
+        <input type ='submit' id= 'myButton' onsubmit='myfunction();' class='button' onclick= 'myFunction()' value ='Kirjoita viesti' >
 
         <div id='message-box'> 
-          <form action = "/chat/create" method = "POST">
+          <form action = '/chat/create' method = 'POST'>
             <div>
-              <textarea id = "message" name = "message" rows=4 cols = "50" ></textarea> 
+              <textarea id = 'message' name = 'message' rows=4 cols = '50' ></textarea> 
             </div>
             <div>
-              <input class='button' type = "submit" name = "sendMessage" value = "Lähetä viesti">
-              <input type = "hidden" name = "advertisement_id" value = {{ advertisement[0] }}>
-              <input type = "hidden" name = "user_id" value = {{ advertisement[1] }}>
+              <input class='button' type = 'submit' name = 'sendMessage' value = 'Lähetä viesti'>
+              <input type = 'hidden' name = 'advertisement_id' value = {{ advertisement[0] }}>
+              <input type = 'hidden' name = 'user_id' value = {{ advertisement[1] }}>
             </div>
           </form>
         </div>
       {% else %}
-        <form action = "/login" method = 'POST'>
+        <form action = '/login' method = 'POST'>
           <input class = 'button' type = 'submit' name = 'login' value = 'Kirjoita viesti'>
-          <input type = "hidden" name = "recentUrl" value = {{ request.path }}> 
+          <input type = 'hidden' name = 'recentUrl' value = {{ request.path }}> 
         </form>
       {% endif %}
     </div>
@@ -105,19 +102,19 @@ function plusSlides(n) {
 
 function showSlides(n) {
   var i;
-  var slides = document.getElementsByClassName("mySlides");
+  var slides = document.getElementsByClassName('mySlides');
   if (n > slides.length) {slideIndex = 1}    
   if (n < 1) {slideIndex = slides.length}
   for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";  
+      slides[i].style.display = 'none';  
   }
-  slides[slideIndex-1].style.display = "block";  
+  slides[slideIndex-1].style.display = 'block';  
 }
   function myFunction() {
-      var x = document.getElementById("message-box");
-      var button = document.getElementById("myButton");
-      x.style.display = "block";
-      button.style.display = "none";
+      var x = document.getElementById('message-box');
+      var button = document.getElementById('myButton');
+      x.style.display = 'block';
+      button.style.display = 'none';
   } 
   </script>
 {% endblock %}

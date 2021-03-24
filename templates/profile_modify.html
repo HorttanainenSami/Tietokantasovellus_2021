@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% block title %} Muokkaa profiilia {% endblock %}
 {% block content %}
-<link rel = "stylesheet" href="/static/css/profile.css">
+<link rel = 'stylesheet' href='/static/css/profile.css'>
 <body>
   <div class = 'modify-container'>
     <h2> Muokkaa profiiliasi </h2>
@@ -14,11 +14,11 @@
       </form>
     {% endif %}
 
-    <form id = 'save' action='/user/profile/update' onsubmit="return check(this)" method='POST' enctype = 'multipart/form-data'>
+    <form id = 'save' action='/user/profile/update' onsubmit='return check(this)' method='POST' enctype = 'multipart/form-data'>
       <input class = 'modify-button' type = 'submit' name = 'save' value = 'Tallenna muutokset'>
     </form>
 
-    <form action = '/user/profile' method="GET">
+    <form action = '/user/profile' method='GET'>
       <input class = 'modify-button' type = 'submit' name = 'return' value = 'Palaa takaisin'>
     </form>
   </div>
@@ -65,7 +65,7 @@
     return true;
   }
   function countWords(self) {
-      document.getElementById("words-counter").innerHTML = self.value.length + "/500 kirjainta";
+      document.getElementById('words-counter').innerHTML = self.value.length + '/500 kirjainta';
   }
 </script>
 {% endblock %}

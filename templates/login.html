@@ -1,23 +1,23 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% block title %} Kirjaudu sisään {% endblock %}
 {% block content %}
 <link rel = 'stylesheet' href = '/static/css/form.css'>
 
 <div class='form-container'>
 
-  <form action="/login/check" method="POST">
+  <form action='/login/check' method='POST'>
     <h2> Kirjaudu sisään </h2>
 
     <p> Käyttäjätili: </p>
-    <input type= "text" name ="username">
+    <input type= 'text' name ='username'>
     <p> Salasana:</p>
-    <input type= "password" name = "password">
+    <input type= 'password' name = 'password'>
     <br>
-    <input class = 'form-button' type = "submit" value = "Kirjaudu"> 
+    <input class = 'form-button' type = 'submit' value = 'Kirjaudu'> 
 
     <div>
       <p> Etkö omista tunnusta?<br> 
-      <a href="/signin"> Luo tunnus tästä! </a></p>
+      <a href='/signin'> Luo tunnus tästä! </a></p>
     </div>
   </form>
 

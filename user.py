@@ -22,7 +22,6 @@ def handleRegister(username, password):
     sql = 'SELECT * FROM users WHERE username=:username'
     result = db.session.execute(sql, {'username':username}).fetchone()
     if result is not None:
-        print(result)
         return 'error'
     hash_value = generate_password_hash(password)
     sql = "INSERT INTO users (username, password, created_at) VALUES (:username, :password, NOW())"
@@ -58,6 +57,7 @@ def update(pitch, reside, user_id):
     db.session.execute(sql, {'pitch':pitch, 'reside':reside, 'user_id':user_id})
     db.session.commit()
     return 'OK'
+    
 def change_password(old, new, user_id):
     sql = 'SELECT password FROM users WHERE id=:id'
     correct_hash = db.session.execute(sql, {'id':user_id}).fetchone()
