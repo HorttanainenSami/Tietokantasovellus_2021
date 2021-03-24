@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/css/chat.css"> 
 
-<div class= 'container'>
+<div class= 'chat-container'>
 
   <div class ='profile-info'> 
     <form action='/user/profile/{{ profile[0] }}' method ='GET'>
@@ -17,7 +17,7 @@
         <h3> {{ profile[1] }} </h3>
       </button>
     </form>
-    <form  action='/show/advertisement/{{ profile[3]}}' method='GET'>
+    <form  action='/advertisement/show/{{ profile[3]}}' method='GET'>
       <button class='info-container2' style='submit'>
         <p> Ilmoitukseen </p>
       </button>
@@ -28,27 +28,24 @@
     <div class = 'chat-message'> 
       {% for message in messages %}
 
-      {% if message[3] ==  session['id'] %}
-        <div id = 'own-message'>
-          <div class = 'message'>
-            <p>{{message[5]}}</p>
+        {% if message[0] ==  session['id'] %}
+          <div id = 'own-message'>
+            <div class = 'message'>
+              <p>{{message[1]}}</p>
+            </div>
+            <div class = 'date'>
+              <span> {{formatdate(message[2]) }} </span>
+            </div>
           </div>
-          <div class = 'date'>
-            <span> {{formatdate(message[6]) }} </span>
-            {% if message[5]%}
-            <span> &#10004;</span>
-            {% endif %}
-          </div>
-        </div>
 
-      {% else %}
-        <div id = 'others-message'>
-          <div class = 'message'>
-            <p> {{message[5]}} </p>
+        {% else %}
+          <div id = 'others-message'>
+            <div class = 'message'>
+              <p> {{message[1]}} </p>
+            </div>
+            <div class = 'date'><span> {{formatdate(message[2])}} </span> </div>
           </div>
-          <div class = 'date'><span> {{formatdate(message[6])}} </span> </div>
-        </div>
-      {% endif %}
+        {% endif %}
       {% endfor %}
     </div>
     

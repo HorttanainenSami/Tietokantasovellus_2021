@@ -11,10 +11,10 @@
   <a class = 'preview-box' href ='/chat/{{ chat[0] }}'>
       
       <div class = 'avatar'>
-        {% if chat[7] is none %}
+        {% if chat[6] is none %}
           <img class = "preview-avatar-img" src="/static/avatar_placeholder.jpeg"> 
         {% else %}
-          <img class = 'preview-avatar-img' src='/show/image/{{ chat[7] }}'>
+          <img class = 'preview-avatar-img' src='/show/image/{{ chat[6] }}'>
         {% endif %}
       </div>
         
@@ -25,7 +25,7 @@
 
         <div class = 'message'>
             <span class='sender'>
-              {% if chat[6]==session['id'] %}
+              {% if chat[5]==session['id'] %}
                 You: 
               {% else %}
                 {{ chat[1] }}:
@@ -41,16 +41,6 @@
           <p>{{ format_date(chat[4]) }}</p>
         </div>
 
-        <div class = 'notification'>
-          {% if chat[5]!=0 %}
-            {% if chat[5] == 1 %}
-              <p>{{ chat[5] }} lukematon viesti </p>
-            {% else %}
-              <p>{{ chat[5] }} lukematonta viestiä </p>
-            {% endif %}
-          {% endif %}
-
-        </div>
       </div>
   </a>
   {% endfor %}

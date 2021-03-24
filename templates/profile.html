@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
-{% import 'advert_preview.html' as form %}
+{% import 'card.html' as form %}
 {% block title %} Profiili {% endblock %}
 {% block content %}
 <link rel = "stylesheet" href="/static/css/profile.css">
+<link rel = 'stylesheet' href='/static/css/advertisementcard.css'>
+<link rel ='stylesheet' href='/static/css/slideshow.css'>
+
 {% if profile[0]==session['id'] %}
   <div class = 'modify-container'>
     <h2> Muokkaa profiiliasi </h2>
@@ -60,34 +63,35 @@
   {% endif %}
 
   {% for advertisement in advertisements %}
-  {% set images = get_images(advertisement[0]) %}
-    {{form.advert_preview(images, advertisement,loop.index )}}
+    {{form.card(images[loop.index0], advertisement,loop.index )}}
   {% endfor %}
 </div>
   
-  <script>
-  var slideIndex = [];
-  var slideId = [];
-for(i = 1; i<={{advertisements|length}};i++){
+<script>
+var slideIndex = [];
+var slideId = [];
+for(i = 1; i<={{images|length}};i++){
     slideIndex.push(1);
     slideId.push("mySlides"+i)
     showSlides(1,i-1);
   }
+function plusSlides(n, no) {
+  showSlides(slideIndex[no] += n, no);
+}
 
-  function plusSlides(n, no) {
-    showSlides(slideIndex[no] += n, no);
+function showSlides(n, no) {
+  var i;
+  var x = document.getElementsByClassName(slideId[no]);
+  if (n > x.length) {slideIndex[no] = 1}    
+  if (n < 1) {slideIndex[no] = x.length}
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";  
   }
-
-  function showSlides(n, no) {
-    var i;
-    var x = document.getElementsByClassName(slideId[no]);
-    if (n > x.length) {slideIndex[no] = 1}    
-    if (n < 1) {slideIndex[no] = x.length}
-    for (i = 0; i < x.length; i++) {
-       x[i].style.display = "none";  
-    }
-    x[slideIndex[no]-1].style.display = "block";  
+  if(x.length ==0){
+    return;
   }
-  </script>
+  x[slideIndex[no]-1].style.display = "block";  
+}
+</script>
 {% endblock %}
 

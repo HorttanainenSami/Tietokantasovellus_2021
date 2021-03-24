@@ -9,32 +9,35 @@
 
     <h1> Tonttien vuokraus sovellus </h1>
     <div class ='navbar'>
-      <a href = "/"> Etusivu</a>
+      <a class='button' href = "/"> Etusivu</a>
 
       {% if session.username %}
-      |<a href = "/advertisement/unpublished"> Luo uusi ilmoitus </a>
-      |<a href = "/user/profile"> Näytä profiili </a>
-      |<a href = "/user/messages"> Näytä viestit </a>
-      |<a href = "/logout"> Kirjaudu ulos</a>
+        <a class='button' href = "/advertisement/unpublished"> Luo uusi ilmoitus </a>
+        <a class='button' href = "/user/profile"> Näytä profiili </a>
+        <a class='button' href = "/user/messages"> Näytä viestit </a>
+        <a class='button' href = "/logout"> Kirjaudu ulos</a>
       {% else %}
-      |<a href = "/login"> Kirjaudu sisään </a>
+        <a class='button' href = "/login"> Kirjaudu sisään </a>
       {% endif %}
+      
     </div>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <div class = 'flashes-container'>
-          {% for category, message in messages %}
-          <p class='{{ category }}'>{{ message }}</p>
-          {% endfor %}
-        </div>
-        {% endif %}
-      {% endwith %}
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class = 'flashes-container'>
+        {% for category, message in messages %}
+        <p class='{{ category }}'>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
 
-      {% block content %}{% endblock %}
-    <footer> 
-      <hr>
-      <p> Tekijä: Sami Horttanainen</p>
-    </footer>
+    <div class= 'container'>    {% block content %}{% endblock %}</div>
 
+
+  </div>
+  <div class = 'footer'> 
+    <hr>
+    <p> Tekijä: Sami Horttanainen</p>
   </div>
 </body>

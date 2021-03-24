@@ -26,8 +26,6 @@ def show_chat(chat_id):
         return render_template('404.html'), 404
     profile_info = chat.get_participant(chat_id, session['id'])  
 
-    print(profile_info)
-    print(type(profile_info[2]))
     def format_date(date):
         time_passed = datetime.now()-date
         if timedelta(days=1) > time_passed:
@@ -67,29 +65,36 @@ def message_send():
 @app.route("/user/profile")
 def profile():
     profile = userSession.get_user(session['id'])
-    pub_adv = query.get_advert_published(session["id"])
+    pub_adv = query.get_published(session["id"])
 
-    def get_images(advertisement_id):
-        images = query.get_images(advertisement_id)
-        return images
+    images = []
+    for adv in pub_adv:
+        advert_id = adv[0]
+        result = query.get_images(advert_id)
+        images.append(result)
 
-    return render_template("profile.html", advertisements=pub_adv, get_images=get_images, profile = profile)
+    return render_template("profile.html", advertisements=pub_adv, images=images, profile = profile)
 
 @app.route('/user/profile/<int:user_id>')
 def show_profile(user_id):
     profile = userSession.get_user(user_id)
-    pub_adv = query.get_advert_published(user_id)
+    pub_adv = query.get_published(user_id)
 
-    def get_images(advertisement_id):
-        images = query.get_images(advertisement_id)
-        return images
+    images = []
+    for adv in pub_adv:
+        advert_id = adv[0]
+        result = query.get_images(advert_id)
+        images.append(result)
 
-    return render_template("profile.html", advertisements=pub_adv, get_images=get_images, profile=profile)
+    return render_template("profile.html", advertisements=pub_adv,images=images,  profile=profile)
 
 @app.route('/user/profile/remove', methods=['POST'])
 def profile_delete():
-    ## DELETE ALL 
-    return 
+    userSession.remove_user(session['id'])
+    del session['id']
+    del session['username']
+    flash('Käyttäjätunnuksesi on poistettu','success')
+    return redirect('/') 
 
 @app.route('/user/profile/changepassword')
 def profile_change_password_form():
@@ -122,18 +127,11 @@ def remove_avatar():
 def update_profile():
     if 'file' in request.files:
         file = request.files['file']
-        print(file)
         userSession.avatar_save(session['id'], file)
-
     pitch = request.form['pitch']
     reside = request.form['reside']
     userSession.update(pitch, reside, session['id'])
     return redirect('/user/profile/modify') 
-
-@app.route('/user/profile/<int:id>')
-def profile_show(id):
-    profile = userSession.get_user(session['id'])
-    return render_template('profile.html', profile=profile)
 
 @app.route("/signin")
 def signin():
@@ -184,24 +182,58 @@ def logout():
 ########################################################
 ### handle uploading
 
-@app.route("/")
+@app.route('/')
 def index():
     advertisements = query.get_adverts()
+    ## part query to 10 item pages
+    current_page = request.args.get('page', 1, type=int)
+    items_per_page = 5
+    pages = round(len(advertisements)/items_per_page+ .499)
+    from_page = int(current_page) * items_per_page - items_per_page
+    upto_page = int(current_page) * items_per_page
+    list_part = advertisements[from_page:upto_page]
+
     images = []
-    for adv in advertisements:
+    for adv in list_part:
         images.append(query.get_images(adv[0]))
-        print(images)
-    return render_template("index.html", images=images, advertisements=advertisements)
+
+    return render_template("index.html", images=images, advertisements=list_part, pages=pages, current_page=current_page)
+
+@app.route('/search', methods=['GET'])
+def search():
+    region= request.args['region']
+    max=request.args['max']
+    min=request.args['min']
+    result= query.search(region, min, max)
+    current_page = request.args.get('page', 1, type=int)
+    items_per_page = 5
+    pages = round(len(result)/items_per_page+ .499)
+    from_page = int(current_page) * items_per_page - items_per_page
+    upto_page = int(current_page) * items_per_page
+    list_part = result[from_page:upto_page]
+
+    images = []
+    for adv in list_part:
+        images.append(query.get_images(adv[0]))
+
+    return render_template("search.html", images=images, advertisements=list_part, pages=pages, current_page=current_page, region=region, max=max, min=min)
+
+@app.route('/advertisement/publish', methods=['POST'])
+def advert_publish():
+    advert_id = request.form['advert_id']
+    query.advert_publish(advert_id, session['id'])
+    flash('Ilmoituksesi on julkaistu', 'success')
+    return redirect('/advertisement/show/'+str(advert_id))
 
 @app.route("/advertisement/unpublished")
 def show_unpub_adv():
-    incompletes = query.get_advert_incompletes(session["id"])
+    incompletes = query.get_incompletes(session["id"])
     images = []
     for incomplete in incompletes:
         advert_id = incomplete[0]
         result = query.get_images(advert_id)
         images.append(result)
-
+    print(images)
     return render_template("create.html", advertisements=incompletes, images=images)
 
 @app.route("/advertisement/new", methods=["POST"])
@@ -212,19 +244,14 @@ def new_adv():
 @app.route("/advertisement/edit/<int:id>", methods=["GET"])
 def edit_adv(id):
     images = query.get_images(id)
-    advertisement = query.get_advert_incomplete(session["id"], id)
+    advertisement = query.get_incomplete(session["id"], id)
+    return render_template("edit.html", images=images,advertisement=advertisement, advertisement_id=id)
 
-    return render_template("edit.html", header=advertisement[5], images=images, content=advertisement[7], price=advertisement[6], advertisement_id=id)
-
-@app.route("/advertisement/delete/<int:id>")
-def delete_adv(id):
+@app.route("/advertisement/delete", methods=['POST'])
+def delete_adv():
+    id=request.form['id']
     query.advert_remove(id, session["id"])
-
-    if 'url' in session:
-        url = session['url']
-        del session['url']
-        return redirect(url)
-
+    flash('Ilmoituksesi on poistettu', 'success')
     return redirect("/")
 
 @app.route("/handleRedirect", methods=["POST"])
@@ -237,31 +264,36 @@ def handle():
     if "edit" in request.form:
         return redirect("/advertisement/edit/"+str(advertisement_id))
 
+@app.route('/advertisement/image/delete', methods=['POST'])
+def adv_delete_image():
+    image_id=request.form['img-id']
+    query.image_remove(image_id) 
+    adv_id=request.form['advertisement_id']
+    flash('Kuva poistettu', 'success')
+    return redirect('/advertisement/edit/'+str(adv_id))
+
 @app.route("/advertisement/update", methods=["POST"])
 def update_adv():
     id = request.form["id"]
-    content = request.form["text"]
+    content = request.form["content"]
     header = request.form["header"]
     price = request.form["price"]
+    region = request.form.get('region')
 
-    query.advert_update(content, header, price, id)
-
-    if "publish" in request.form:
-        print("publish")
-        query.advert_publish(id, session["id"])
-        return redirect("/show/advertisement/"+str(id))
-    if "upload" in request.form:
-        print("upload image")
-        file = request.files["image"]
+    if 'file' in request.files:
+        file=request.files['file']
         query.image_save(id, file)
 
+    query.advert_update(content, header, price, id, region)
+    flash('Tiedot tallennettu', 'success')
     return redirect("/advertisement/edit/"+str(id))
 
-@app.route("/show/advertisement/<int:id>")
+@app.route("/advertisement/show/<int:id>")
 def show_adv(id):
     advertisement = query.get_advert(id)
+    if 'error' in advertisement:
+        page_not_found('Wrong id')
     images = query.get_images(id)
-
     return render_template("advertisement.html", advertisement=advertisement, images=images)
 
 @app.route("/show/image/<int:id>")

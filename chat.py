@@ -5,7 +5,7 @@ import datetime
 
 def get_messages(chat_id, user_id):
     ## check if participant in chat
-    sql = 'SELECT * FROM participant as p, message as m WHERE p.chat_id=:chat_id AND m.chat_id=p.chat_id AND p.participant_id=:p_id ORDER BY m.created_at'
+    sql = 'SELECT m.creator_id, m.content, m.created_at FROM participant as p, message as m WHERE p.chat_id=:chat_id AND m.chat_id=p.chat_id AND p.participant_id=:p_id ORDER BY m.created_at'
     result = db.session.execute(sql, {"p_id":user_id, "chat_id":chat_id}).fetchall()
     return result
 
@@ -21,7 +21,7 @@ def get_participant(chat_id, user_id):
 
 def get_all(participant_id):
     ## valitsee kaikki viimeisimmäksi lähetetyt viestit,mikä chat, kenen lähettämä, milloin, mitä sisältää ja kuinka monta lukematonta viestiä sinulla on kyseisessä chatissa 
-    sql = 'SELECT x.chat_id, u.username, u.id, x.content, x.created_at, x.unread, x.creator_id, i.id FROM participant as p,participant as p1, users as u LEFT JOIN images as i ON i.user_id=u.id, (SELECT COUNT(CASE WHEN creator_id=:p_id THEN NULL ELSE CASE WHEN is_read=FALSE THEN TRUE ELSE NULL END END) OVER(PARTITION BY chat_id) as unread, ROW_NUMBER() OVER (PARTITION BY chat_id ORDER BY created_at DESC) as rownum, * FROM message) X WHERE rownum=1 AND p.chat_id=x.chat_id AND p.participant_id=:p_id AND p1.chat_id=p.chat_id AND p1.participant_id!=p.participant_id AND u.id=p1.participant_id ORDER BY x.created_at DESC'
+    sql = 'SELECT last.chat_id, u.username, u.id, last.content, last.created_at, last.creator_id, i.id FROM participant as p,participant as p1, users as u LEFT JOIN images as i ON i.user_id=u.id, (SELECT ROW_NUMBER() OVER (PARTITION BY chat_id ORDER BY created_at DESC) as rownum, * FROM message) last WHERE rownum=1 AND p.chat_id=last.chat_id AND p.participant_id=:p_id AND p1.chat_id=p.chat_id AND p1.participant_id!=p.participant_id AND u.id=p1.participant_id ORDER BY last.created_at DESC'
     result = db.session.execute(sql, {"p_id":participant_id})
     return result.fetchall()
     
@@ -44,7 +44,7 @@ def create(creator_id, advertisement_id, content):
 
     
 def message_send(chat_id, message, creator_id):
-    sql = "INSERT INTO message (creator_id, chat_id, content, created_at, is_read) VALUES (:creator_id, :chat_id, :content, NOW(), FALSE)"
+    sql = "INSERT INTO message (creator_id, chat_id, content, created_at) VALUES (:creator_id, :chat_id, :content, NOW())"
     db.session.execute(sql, {"creator_id":creator_id, "chat_id":chat_id, "content":message})
     db.session.commit()
     return "OK"

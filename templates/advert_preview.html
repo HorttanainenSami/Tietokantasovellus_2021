@@ -1,4 +1,4 @@
-{% macro advert_preview(images, advertisement, number) %}
+{% macro image_slider(images, advertisement, slider_number) %}
   <head>
     <link rel ="stylesheet" href="/static/css/slideshow.css">
   </head>
@@ -8,22 +8,22 @@
     <div class="slideshow-container">
       {% if  images|length != 0: %}
         {% for image in images %}
-          <div class="mySlides{{ number|string }}">
+          <div class="mySlides{{ slider_number|string }}">
             <img src="/show/image/{{ image[0] }}" style = "width:100%">
           </div>
 
         {% endfor %} 
-        <a class="prev" onclick="plusSlides(-1, {{ number }}-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1, {{ number }}-1)">&#10095;</a>
+        <a class="prev" onclick="plusSlides(-1, {{ slider_number}}-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1, {{ slider_number }}-1)">&#10095;</a>
       {% else %}
         <img src = "/static/placeholder.png" style = "width:100%">
       {% endif %}
 
       <a class = "preview_cards" href = "/show/advertisement/{{ advertisement[0] }}">
         <div class = "preview-content">
-          <h2>{{ advertisement[5]}} </h2>
-          <div class="price"> {{ advertisement[6]}}€/Kk</div>
-          <p>{{ advertisement[7][:200] }}</p>
+          <h2>{{ advertisement[2]}} </h2>
+          <div class="price"> {{ advertisement[3]}}€/Kk</div>
+          <p>{{ advertisement[4][:200] }}</p>
           <input type = "hidden" name="id" value = {{advertisement[0]}}>
         </div>
       </div>

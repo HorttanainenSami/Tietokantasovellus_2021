@@ -19,6 +19,11 @@ def handleLogin(username, password):
     return None
 
 def handleRegister(username, password):
+    sql = 'SELECT * FROM users WHERE username=:username'
+    result = db.session.execute(sql, {'username':username}).fetchone()
+    if result is not None:
+        print(result)
+        return 'error'
     hash_value = generate_password_hash(password)
     sql = "INSERT INTO users (username, password, created_at) VALUES (:username, :password, NOW())"
     db.session.execute(sql, {"username":username, "password" : hash_value})
@@ -33,11 +38,9 @@ def get_user(user_id):
 def avatar_save(user_id, file):
     name = file.filename
     if not name.endswith(tuple(['.jpeg', '.png'])):
-        print("invalid filename")
         return "Invalid filename"
     data = file.read()
     if len(data) > 100*1024:
-        print("too big")
         return "Too big file"
     sql = "INSERT INTO images (data,avatar, user_id) VALUES (:data, TRUE,:user_id)"
     db.session.execute(sql, {"data":data, "user_id":user_id})
@@ -60,7 +63,6 @@ def change_password(old, new, user_id):
     correct_hash = db.session.execute(sql, {'id':user_id}).fetchone()
 
     if correct_hash is not None:
-        print('eka')
         if check_password_hash(correct_hash[0], old):
             print('toka')
             new_hash=generate_password_hash(new)
@@ -69,3 +71,8 @@ def change_password(old, new, user_id):
             db.session.commit()
             return 'OK'
     return 'error'
+def remove_user(user_id):
+    sql= 'DELETE FROM users WHERE id=:user_id'
+    db.session.execute(sql, {'user_id':user_id})
+    db.session.commit()
+    return 'OK'
