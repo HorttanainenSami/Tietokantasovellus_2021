@@ -7,7 +7,7 @@ def search(region, min, max):
     return result.fetchall()
 
 def get_all():
-    sql  = 'SELECT id, published_at, header, price, content FROM advertisement WHERE published=true ORDER BY published_at'
+    sql  = 'SELECT id, published_at, header, price, content FROM advertisement WHERE published=true ORDER BY published_at DESC'
     result = db.session.execute(sql)
     return result.fetchall()
 
