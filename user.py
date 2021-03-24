@@ -30,7 +30,7 @@ def handleRegister(username, password):
     return()
 
 def get_user(user_id):
-    sql = 'SELECT u.id, u.username,u.created_at, reside, info, i.id, i.data FROM users as u LEFT join images as i ON i.user_id = u.id AND i.avatar=true WHERE u.id=:user_id'
+    sql = 'SELECT u.id, u.username,u.created_at, region, info, i.id, i.data FROM users as u LEFT join images as i ON i.user_id = u.id AND i.avatar=true WHERE u.id=:user_id'
     result = db.session.execute(sql, {'user_id':user_id})
     return result.fetchone()
 
@@ -52,9 +52,9 @@ def avatar_remove(user_id):
     db.session.commit()
     return 'OK'
 
-def update(pitch, reside, user_id):
-    sql = 'UPDATE users SET info=:pitch, reside=:reside  WHERE id=:user_id'
-    db.session.execute(sql, {'pitch':pitch, 'reside':reside, 'user_id':user_id})
+def update(pitch, region, user_id):
+    sql = 'UPDATE users SET info=:pitch, region=:region  WHERE id=:user_id'
+    db.session.execute(sql, {'pitch':pitch, 'region':region, 'user_id':user_id})
     db.session.commit()
     return 'OK'
     
