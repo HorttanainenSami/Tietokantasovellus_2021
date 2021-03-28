@@ -17,6 +17,8 @@ Ideana on että sovelluksessa voidaan tarjota ylimääräisenä oleva tontti mui
   - ilmoitukset voidaan poistaa, ja poistuu myös kaikki siihen ilmoitukseen liittyvät kuvat ja keskustelut
   - käyttäjä voidaan poistaa ja kaikki siihen liittyvä poistuu
 
+## Tietokanta diagrammi
+![](https://github.com/HorttanainenSami/Tietokantasovellus_2021/blob/main/documents/tietokanta-diagrammi.jpg)
 
 ## Testaus
 - [heroku](https://tsoha-tontti-vuokraus.herokuapp.com/)
